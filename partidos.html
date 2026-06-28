@@ -343,7 +343,12 @@
             const awayScoreInput = document.getElementById('cAwayScore').value;
 
             if (homeScoreInput === '' || awayScoreInput === '') {
-                alert("Debes rellenar ambos marcadores para registrar el partido.");
+                showCustomModal({
+                    title: 'Marcadores Requeridos',
+                    message: 'Debes rellenar ambos marcadores para registrar el partido.',
+                    icon: 'warning',
+                    type: 'alert'
+                });
                 return;
             }
 
@@ -362,16 +367,47 @@
                 renderMatchesList();
                 renderQuickTable();
                 checkGroupMatchesProgress();
+                
+                showCustomModal({
+                    title: 'Marcador Registrado',
+                    message: 'El marcador ha sido actualizado correctamente.',
+                    icon: 'check_circle',
+                    iconClass: 'text-secondary',
+                    type: 'success'
+                });
+            } else {
+                showCustomModal({
+                    title: 'Error al Registrar',
+                    message: res.message,
+                    icon: 'error',
+                    type: 'alert'
+                });
             }
         }
 
         function viewActiveMatchBigScreen() {
             if (!selectedMatch) {
-                alert("Por favor selecciona un partido primero.");
+                showCustomModal({
+                    title: 'Selección Requerida',
+                    message: 'Por favor selecciona un partido primero de la lista.',
+                    icon: 'warning',
+                    type: 'alert'
+                });
                 return;
             }
             setActiveMatch(state, selectedMatch);
-            window.open("vista-de-partido.html", "_blank");
+            showCustomModal({
+                title: 'Transmisión Enviada',
+                message: `El partido entre ${selectedMatch.home.name} y ${selectedMatch.away.name} se está transmitiendo en vivo. Si aún no tienes la pantalla gigante abierta, haz clic en "Abrir Pantalla".`,
+                icon: 'tv',
+                iconClass: 'text-secondary',
+                type: 'confirm',
+                confirmText: 'Abrir Pantalla',
+                cancelText: 'Cerrar',
+                onConfirm: () => {
+                    window.open("vista-de-partido.html", "_blank");
+                }
+            });
         }
 
         function initQuickTableOptions() {
@@ -455,9 +491,75 @@
             if (res.success) {
                 window.location.href = "fase-final.html";
             } else {
-                alert(res.message);
+                showCustomModal({
+                    title: 'Error de Fase',
+                    message: res.message,
+                    icon: 'error',
+                    type: 'alert'
+                });
             }
         }
+
+        function showCustomModal(options) {
+            const modal = document.getElementById('customModal');
+            const titleEl = document.getElementById('customModalTitle');
+            const messageEl = document.getElementById('customModalMessage');
+            const iconEl = document.getElementById('customModalIcon');
+            const confirmBtn = document.getElementById('customModalConfirmBtn');
+            const cancelBtn = document.getElementById('customModalCancelBtn');
+            
+            titleEl.textContent = options.title || 'Alerta';
+            messageEl.textContent = options.message || '';
+            iconEl.textContent = options.icon || 'warning';
+            iconEl.className = `material-symbols-outlined ${options.iconClass || 'text-primary'}`;
+            
+            confirmBtn.textContent = options.confirmText || 'Aceptar';
+            cancelBtn.textContent = options.cancelText || 'Cancelar';
+            
+            // Adjust modal border color based on theme
+            const contentBox = modal.querySelector('.modal-content');
+            if (options.type === 'confirm') {
+                contentBox.style.borderColor = 'rgba(255, 45, 120, 0.4)';
+                contentBox.style.boxShadow = '0 0 25px rgba(255, 45, 120, 0.15)';
+                cancelBtn.style.display = 'inline-block';
+            } else if (options.type === 'success') {
+                contentBox.style.borderColor = 'rgba(0, 255, 204, 0.4)';
+                contentBox.style.boxShadow = '0 0 25px rgba(0, 255, 204, 0.15)';
+                cancelBtn.style.display = 'none';
+                iconEl.className = 'material-symbols-outlined text-secondary';
+            } else {
+                contentBox.style.borderColor = 'rgba(255, 224, 74, 0.4)';
+                contentBox.style.boxShadow = '0 0 25px rgba(255, 224, 74, 0.15)';
+                cancelBtn.style.display = 'none';
+            }
+            
+            confirmBtn.onclick = () => {
+                modal.classList.add('hidden');
+                if (options.onConfirm) options.onConfirm();
+            };
+            
+            cancelBtn.onclick = () => {
+                modal.classList.add('hidden');
+                if (options.onCancel) options.onCancel();
+            };
+            
+            modal.classList.remove('hidden');
+        }
     </script>
+
+    <!-- Reusable Custom Alert/Confirm Modal -->
+    <div id="customModal" class="modal-overlay hidden" style="z-index: 150;">
+        <div class="modal-content" style="max-width: 420px; border-color: rgba(255, 45, 120, 0.4); box-shadow: 0 0 25px rgba(255, 45, 120, 0.15); background: rgba(20, 20, 34, 0.95); backdrop-filter: blur(10px);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                <span id="customModalIcon" class="material-symbols-outlined text-primary" style="font-size: 2rem;">warning</span>
+                <h3 id="customModalTitle" class="font-headline font-bold text-on-surface text-lg">Alerta</h3>
+            </div>
+            <p id="customModalMessage" class="font-body text-on-surface-variant text-sm" style="margin-bottom: 1.5rem; line-height: 1.5;"></p>
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem;" id="customModalActions">
+                <button id="customModalCancelBtn" class="btn btn-xs" style="border: 1px solid var(--outline); color: var(--on-surface-variant); padding: 0.5rem 1rem; font-size: 0.75rem; background: transparent; cursor: pointer;">Cancelar</button>
+                <button id="customModalConfirmBtn" class="btn btn-xs btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Aceptar</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

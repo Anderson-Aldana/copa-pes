@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Sorteo - TOKYO LEAGUE</title>
+    <title>Sorteo - Copa PES</title>
     <!-- Google Fonts & Material Symbols -->
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
@@ -134,7 +134,7 @@
                                 <span class="material-symbols-outlined text-primary" style="font-size: 4rem; margin-bottom: 1.5rem; filter: drop-shadow(0 0 10px var(--primary));">public</span>
                                 <h3 style="font-size: 1.75rem; font-weight: 800; color: var(--on-surface); margin-bottom: 0.5rem;">Sorteo de Selecciones</h3>
                                 <p class="page-subtitle" style="margin-bottom: 2rem; max-width: 380px; font-size: 0.875rem;">Asigna un país al azar a cada jugador registrado. Se requieren mínimo 3 jugadores.</p>
-                                <button onclick="startCountryDrawAnimation()" class="btn btn-pill btn-primary" id="drawTeamsBtn">
+                                <button onclick="tryStartCountryDraw()" class="btn btn-pill btn-primary" id="drawTeamsBtn">
                                     <span class="material-symbols-outlined">shuffle</span>
                                     Realizar Sorteo
                                 </button>
@@ -391,7 +391,7 @@
                         Clasifican los mejores <strong class="text-tertiary">${config.K} equipos</strong> a la Fase Final (${config.round === 'final' ? 'Gran Final' : config.round === 'sf' ? 'Semifinales' : 'Cuartos'}).
                     </p>
                     
-                    <button onclick="startGroupDrawAnimation()" class="btn btn-pill btn-secondary" id="drawGroupsBtn">
+                    <button onclick="tryStartGroupDraw()" class="btn btn-pill btn-secondary" id="drawGroupsBtn">
                         <span class="material-symbols-outlined">grid_view</span>
                         Sortear Grupos
                     </button>
@@ -489,6 +489,98 @@
         function startTournamentPlay() {
             window.location.href = "fase-de-grupos.html";
         }
+
+        function tryStartCountryDraw() {
+            const hasTeams = state.players.some(p => p.team !== null);
+            if (hasTeams) {
+                showCustomModal({
+                    title: '¿Reiniciar Sorteo?',
+                    message: 'Ya se han asignado selecciones a los jugadores. Si continúas, se borrarán las asignaciones y se realizará un nuevo sorteo. ¿Deseas continuar?',
+                    icon: 'warning',
+                    type: 'confirm',
+                    onConfirm: () => {
+                        startCountryDrawAnimation();
+                    }
+                });
+            } else {
+                startCountryDrawAnimation();
+            }
+        }
+
+        function tryStartGroupDraw() {
+            const hasGroups = state.groups && state.groups.length > 0;
+            if (hasGroups) {
+                showCustomModal({
+                    title: '¿Reiniciar Sorteo de Grupos?',
+                    message: 'Los grupos ya han sido sorteados. Si procedes, se borrarán todos los grupos y el progreso actual de los partidos. ¿Deseas continuar?',
+                    icon: 'warning',
+                    type: 'confirm',
+                    onConfirm: () => {
+                        startGroupDrawAnimation();
+                    }
+                });
+            } else {
+                startGroupDrawAnimation();
+            }
+        }
+
+        function showCustomModal(options) {
+            const modal = document.getElementById('customModal');
+            const titleEl = document.getElementById('customModalTitle');
+            const messageEl = document.getElementById('customModalMessage');
+            const iconEl = document.getElementById('customModalIcon');
+            const confirmBtn = document.getElementById('customModalConfirmBtn');
+            const cancelBtn = document.getElementById('customModalCancelBtn');
+            
+            titleEl.textContent = options.title || 'Alerta';
+            messageEl.textContent = options.message || '';
+            iconEl.textContent = options.icon || 'warning';
+            iconEl.className = `material-symbols-outlined ${options.iconClass || 'text-primary'}`;
+            
+            // Adjust modal border color based on theme
+            const contentBox = modal.querySelector('.modal-content');
+            if (options.type === 'confirm') {
+                contentBox.style.borderColor = 'rgba(255, 45, 120, 0.4)';
+                contentBox.style.boxShadow = '0 0 25px rgba(255, 45, 120, 0.15)';
+                cancelBtn.style.display = 'inline-block';
+            } else if (options.type === 'success') {
+                contentBox.style.borderColor = 'rgba(0, 255, 204, 0.4)';
+                contentBox.style.boxShadow = '0 0 25px rgba(0, 255, 204, 0.15)';
+                cancelBtn.style.display = 'none';
+                iconEl.className = 'material-symbols-outlined text-secondary';
+            } else {
+                contentBox.style.borderColor = 'rgba(255, 224, 74, 0.4)';
+                contentBox.style.boxShadow = '0 0 25px rgba(255, 224, 74, 0.15)';
+                cancelBtn.style.display = 'none';
+            }
+            
+            confirmBtn.onclick = () => {
+                modal.classList.add('hidden');
+                if (options.onConfirm) options.onConfirm();
+            };
+            
+            cancelBtn.onclick = () => {
+                modal.classList.add('hidden');
+                if (options.onCancel) options.onCancel();
+            };
+            
+            modal.classList.remove('hidden');
+        }
     </script>
+
+    <!-- Reusable Custom Alert/Confirm Modal -->
+    <div id="customModal" class="modal-overlay hidden" style="z-index: 150;">
+        <div class="modal-content" style="max-width: 420px; border-color: rgba(255, 45, 120, 0.4); box-shadow: 0 0 25px rgba(255, 45, 120, 0.15); background: rgba(20, 20, 34, 0.95); backdrop-filter: blur(10px);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                <span id="customModalIcon" class="material-symbols-outlined text-primary" style="font-size: 2rem;">warning</span>
+                <h3 id="customModalTitle" class="font-headline font-bold text-on-surface text-lg">Alerta</h3>
+            </div>
+            <p id="customModalMessage" class="font-body text-on-surface-variant text-sm" style="margin-bottom: 1.5rem; line-height: 1.5;"></p>
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem;" id="customModalActions">
+                <button id="customModalCancelBtn" class="btn btn-xs" style="border: 1px solid var(--outline); color: var(--on-surface-variant); padding: 0.5rem 1rem; font-size: 0.75rem; background: transparent; cursor: pointer;">Cancelar</button>
+                <button id="customModalConfirmBtn" class="btn btn-xs btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Aceptar</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

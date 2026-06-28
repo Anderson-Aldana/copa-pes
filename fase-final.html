@@ -371,7 +371,12 @@
 
         function openScoreModal(match, round) {
             if (!match.home || !match.away) {
-                alert("Este partido está esperando que finalicen rondas previas.");
+                showCustomModal({
+                    title: 'Fase Pendiente',
+                    message: 'Este partido está esperando que finalicen rondas previas para definir a sus contrincantes.',
+                    icon: 'hourglass_empty',
+                    type: 'alert'
+                });
                 return;
             }
 
@@ -426,7 +431,12 @@
             let awayPenalties = null;
 
             if (homeScore === '' || awayScore === '') {
-                alert("Debes rellenar ambos marcadores.");
+                showCustomModal({
+                    title: 'Marcadores Requeridos',
+                    message: 'Debes rellenar ambos marcadores.',
+                    icon: 'warning',
+                    type: 'alert'
+                });
                 return;
             }
 
@@ -435,11 +445,21 @@
                 awayPenalties = document.getElementById('mAwayPenalties').value;
                 
                 if (homePenalties === '' || awayPenalties === '') {
-                    alert("Debe ingresar marcadores para los penales si empataron.");
+                    showCustomModal({
+                        title: 'Penales Requeridos',
+                        message: 'Debe ingresar marcadores para la tanda de penales si empataron en goles.',
+                        icon: 'warning',
+                        type: 'alert'
+                    });
                     return;
                 }
                 if (parseInt(homePenalties) === parseInt(awayPenalties)) {
-                    alert("Los penales no pueden quedar empatados.");
+                    showCustomModal({
+                        title: 'Empate no permitido',
+                        message: 'Los penales no pueden quedar empatados. Debe haber un ganador definido.',
+                        icon: 'warning',
+                        type: 'alert'
+                    });
                     return;
                 }
             }
@@ -449,15 +469,39 @@
                 state = loadState(); // Reload updated state
                 closeModal();
                 renderBracket();
+                
+                showCustomModal({
+                    title: 'Resultado Guardado',
+                    message: 'El marcador ha sido guardado exitosamente.',
+                    icon: 'check_circle',
+                    iconClass: 'text-secondary',
+                    type: 'success'
+                });
             } else {
-                alert(res.message);
+                showCustomModal({
+                    title: 'Error al Registrar',
+                    message: res.message,
+                    icon: 'error',
+                    type: 'alert'
+                });
             }
         }
 
         function transmitModalMatch() {
             if (!activeMatch) return;
             setActiveMatch(state, activeMatch);
-            window.open("vista-de-partido.html", "_blank");
+            showCustomModal({
+                title: 'Transmisión Enviada',
+                message: `El encuentro de Fase Final entre ${activeMatch.home.name} y ${activeMatch.away.name} se está transmitiendo en vivo. Si aún no tienes abierta la pantalla gigante, haz clic en "Abrir Pantalla".`,
+                icon: 'tv',
+                iconClass: 'text-secondary',
+                type: 'confirm',
+                confirmText: 'Abrir Pantalla',
+                cancelText: 'Cerrar',
+                onConfirm: () => {
+                    window.open("vista-de-partido.html", "_blank");
+                }
+            });
         }
 
         function drawConnectionLines() {
@@ -562,6 +606,67 @@
                 connectElements("card_sf_m2", "card_final_m1", true);
             }
         }
+
+        function showCustomModal(options) {
+            const modal = document.getElementById('customModal');
+            const titleEl = document.getElementById('customModalTitle');
+            const messageEl = document.getElementById('customModalMessage');
+            const iconEl = document.getElementById('customModalIcon');
+            const confirmBtn = document.getElementById('customModalConfirmBtn');
+            const cancelBtn = document.getElementById('customModalCancelBtn');
+            
+            titleEl.textContent = options.title || 'Alerta';
+            messageEl.textContent = options.message || '';
+            iconEl.textContent = options.icon || 'warning';
+            iconEl.className = `material-symbols-outlined ${options.iconClass || 'text-primary'}`;
+            
+            confirmBtn.textContent = options.confirmText || 'Aceptar';
+            cancelBtn.textContent = options.cancelText || 'Cancelar';
+            
+            // Adjust modal border color based on theme
+            const contentBox = modal.querySelector('.modal-content');
+            if (options.type === 'confirm') {
+                contentBox.style.borderColor = 'rgba(255, 45, 120, 0.4)';
+                contentBox.style.boxShadow = '0 0 25px rgba(255, 45, 120, 0.15)';
+                cancelBtn.style.display = 'inline-block';
+            } else if (options.type === 'success') {
+                contentBox.style.borderColor = 'rgba(0, 255, 204, 0.4)';
+                contentBox.style.boxShadow = '0 0 25px rgba(0, 255, 204, 0.15)';
+                cancelBtn.style.display = 'none';
+                iconEl.className = 'material-symbols-outlined text-secondary';
+            } else {
+                contentBox.style.borderColor = 'rgba(255, 224, 74, 0.4)';
+                contentBox.style.boxShadow = '0 0 25px rgba(255, 224, 74, 0.15)';
+                cancelBtn.style.display = 'none';
+            }
+            
+            confirmBtn.onclick = () => {
+                modal.classList.add('hidden');
+                if (options.onConfirm) options.onConfirm();
+            };
+            
+            cancelBtn.onclick = () => {
+                modal.classList.add('hidden');
+                if (options.onCancel) options.onCancel();
+            };
+            
+            modal.classList.remove('hidden');
+        }
     </script>
+
+    <!-- Reusable Custom Alert/Confirm Modal -->
+    <div id="customModal" class="modal-overlay hidden" style="z-index: 150;">
+        <div class="modal-content" style="max-width: 420px; border-color: rgba(255, 45, 120, 0.4); box-shadow: 0 0 25px rgba(255, 45, 120, 0.15); background: rgba(20, 20, 34, 0.95); backdrop-filter: blur(10px);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+                <span id="customModalIcon" class="material-symbols-outlined text-primary" style="font-size: 2rem;">warning</span>
+                <h3 id="customModalTitle" class="font-headline font-bold text-on-surface text-lg">Alerta</h3>
+            </div>
+            <p id="customModalMessage" class="font-body text-on-surface-variant text-sm" style="margin-bottom: 1.5rem; line-height: 1.5;"></p>
+            <div style="display: flex; justify-content: flex-end; gap: 0.75rem;" id="customModalActions">
+                <button id="customModalCancelBtn" class="btn btn-xs" style="border: 1px solid var(--outline); color: var(--on-surface-variant); padding: 0.5rem 1rem; font-size: 0.75rem; background: transparent; cursor: pointer;">Cancelar</button>
+                <button id="customModalConfirmBtn" class="btn btn-xs btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.75rem; font-weight: 700; cursor: pointer;">Aceptar</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
