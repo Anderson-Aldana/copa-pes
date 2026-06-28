@@ -218,7 +218,7 @@
             });
         }
 
-        function renderPlayerList() {
+        function renderPlayerList(revealedCount = null) {
             const list = document.getElementById('playerList');
             const counter = document.getElementById('playerCounter');
 
@@ -241,8 +241,10 @@
                 item.style.cursor = 'default';
                 item.style.animation = 'fadeIn 0.3s ease-out forwards';
                 
+                const showTeam = player.team && (revealedCount === null || index < revealedCount);
+                
                 let teamInfo = '';
-                if (player.team) {
+                if (showTeam) {
                     teamInfo = `
                         <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem; background: rgba(255,45,120,0.1); padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid rgba(255,45,120,0.2);">
                             <img src="https://flagcdn.com/w40/${player.team.code}.png" class="flag-img" style="width: 1.25rem; height: 0.8rem;">
@@ -257,7 +259,7 @@
                         <span style="font-weight: 600; color: var(--on-surface); font-size: 0.95rem;">${player.name}</span>
                         ${teamInfo}
                     </div>
-                    ${state.currentPhase === 'sorteo' ? `
+                    ${state.currentPhase === 'sorteo' && revealedCount === null ? `
                         <button onclick="deletePlayer('${player.id}')" style="background: none; border: none; color: var(--on-surface-variant); cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--error)'" onmouseout="this.style.color='var(--on-surface-variant)'">
                             <span class="material-symbols-outlined" style="font-size: 1.1rem;">close</span>
                         </button>
@@ -292,6 +294,7 @@
             }
 
             performSorteoEquipos(state);
+            renderPlayerList(0); // Render list with 0 revealed teams
 
             let playerIdx = 0;
             drawNextPlayerCountry();
@@ -307,8 +310,8 @@
 
                 const player = state.players[playerIdx];
                 let cycleIdx = 0;
-                let duration = 80;
-                const totalCycles = 16;
+                let duration = 60;
+                const totalCycles = 12;
 
                 drawContent.innerHTML = `
                     <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
@@ -332,7 +335,7 @@
 
                     cycleIdx++;
                     if (cycleIdx < totalCycles) {
-                        duration += 20;
+                        duration += 15;
                         setTimeout(cycle, duration);
                     } else {
                         // Real country
@@ -351,8 +354,10 @@
                         animName.style.marginTop = "1rem";
                         animName.style.textTransform = "uppercase";
 
+                        renderPlayerList(playerIdx + 1); // Reveal this player's country in list dynamically!
+
                         playerIdx++;
-                        setTimeout(drawNextPlayerCountry, 1800);
+                        setTimeout(drawNextPlayerCountry, 1200);
                     }
                 }
                 

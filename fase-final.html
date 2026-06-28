@@ -85,22 +85,28 @@
                 </div>
             </header>
 
-            <!-- Champion Banner Card (Hidden initially) -->
-            <section id="championCard" class="hidden card" style="border: 2px solid var(--tertiary); max-width: 600px; margin: 0 auto 1rem auto; padding: 1rem; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 0 20px rgba(255,224,74,0.1); animation: blink 2s infinite;">
-                <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,224,74,0.06), transparent); pointer-events: none;"></div>
-                <div class="absolute w-48 h-48 bg-tertiary/10 rounded-full blur-2xl z-0 pointer-events-none trophy-glow"></div>
-                
-                <span class="material-symbols-outlined text-tertiary drop-shadow-[0_0_15px_rgba(255,224,74,0.8)] relative z-10" style="font-size: 4rem; margin-bottom: 0.5rem; font-variation-settings: 'FILL' 1;">trophy</span>
-                <h3 class="font-label text-tertiary uppercase tracking-widest neon-text-tertiary relative z-10" style="font-size: 1.5rem; font-weight: 800;">¡TENEMOS UN CAMPEÓN!</h3>
-                
-                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; background-color: var(--surface-dim); padding: 1rem 2rem; border-radius: 0.75rem; border: 1px solid rgba(255,224,74,0.2); position: relative; z-index: 10;">
-                    <img id="championFlag" src="https://flagcdn.com/w80/br.png" class="flag-img" style="width: 2.2rem; height: 1.45rem;">
-                    <div style="text-align: left;">
-                        <h4 class="font-headline text-on-surface uppercase tracking-wide" id="championTeam" style="font-size: 1.5rem; font-weight: 900; line-height: 1;">BRASIL</h4>
-                        <p class="font-label text-tertiary uppercase tracking-widest" style="font-size: 0.65rem; margin-top: 0.2rem;">Representado por <span id="championPlayer" class="font-bold">Carlos</span></p>
+            <!-- Champion Modal (Overlay, Hidden initially) -->
+            <div id="championCard" class="modal-overlay hidden" style="z-index: 120;">
+                <div class="modal-content" style="border: 2px solid var(--tertiary); max-width: 500px; text-align: center; box-shadow: 0 0 35px rgba(255,224,74,0.25); background: rgba(20, 20, 34, 0.95); backdrop-filter: blur(10px); animation: fadeIn 0.4s ease-out; padding: 2.5rem 2rem; display: flex; flex-direction: column; align-items: center; border-radius: 0.75rem; position: relative;">
+                    <!-- Close button 'X' -->
+                    <button onclick="closeChampionModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--on-surface-variant); cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--error)'" onmouseout="this.style.color='var(--on-surface-variant)'">
+                        <span class="material-symbols-outlined text-xl">close</span>
+                    </button>
+
+                    <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,224,74,0.06), transparent); pointer-events: none; z-index: 0;"></div>
+                    
+                    <span class="material-symbols-outlined text-tertiary drop-shadow-[0_0_15px_rgba(255,224,74,0.8)] relative z-10" style="font-size: 5rem; margin-bottom: 0.5rem; font-variation-settings: 'FILL' 1;">trophy</span>
+                    <h3 class="font-label text-tertiary uppercase tracking-widest neon-text-tertiary relative z-10" style="font-size: 1.5rem; font-weight: 800; text-shadow: 0 0 10px rgba(255,224,74,0.6);">¡TENEMOS UN CAMPEÓN!</h3>
+                    
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; background-color: var(--surface-dim); padding: 1rem 1.5rem; border-radius: 0.75rem; border: 1px solid rgba(255,224,74,0.2); position: relative; z-index: 10; width: 100%; justify-content: center;">
+                        <img id="championFlag" src="https://flagcdn.com/w80/br.png" class="flag-img" style="width: 2.2rem; height: 1.45rem;">
+                        <div style="text-align: left;">
+                            <h4 class="font-headline text-on-surface uppercase tracking-wide" id="championTeam" style="font-size: 1.5rem; font-weight: 900; line-height: 1; margin: 0;">BRASIL</h4>
+                            <p class="font-label text-tertiary uppercase tracking-widest" style="font-size: 0.65rem; margin-top: 0.2rem; margin-bottom: 0;">Representado por <span id="championPlayer" class="font-bold">Carlos</span></p>
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
             <!-- Bracket Wrapper -->
             <div class="bracket-scroll-wrapper" id="bracketWrapper">
@@ -190,6 +196,7 @@
         let state = loadState();
         let activeMatch = null;
         let activeRound = "";
+        let championModalClosed = false;
 
         document.addEventListener('DOMContentLoaded', () => {
             checkPhaseRedirect();
@@ -197,6 +204,11 @@
             window.addEventListener('resize', drawConnectionLines);
             setTimeout(drawConnectionLines, 300);
         });
+
+        function closeChampionModal() {
+            championModalClosed = true;
+            document.getElementById('championCard').classList.add('hidden');
+        }
 
         function renderBracket() {
             const columnsContainer = document.getElementById('bracketColumns');
@@ -219,7 +231,7 @@
             const showFinal = state.bracket.final.length > 0;
 
             const championCard = document.getElementById('championCard');
-            if (state.champion && state.currentPhase === 'campeon') {
+            if (state.champion && state.currentPhase === 'campeon' && !championModalClosed) {
                 championCard.classList.remove('hidden');
                 document.getElementById('championFlag').src = `https://flagcdn.com/w80/${state.champion.code}.png`;
                 document.getElementById('championTeam').textContent = state.champion.name;
