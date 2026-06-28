@@ -85,17 +85,14 @@ h1, h2, h3, h4, h5, h6 {
 /* Neon Glows */
 .neon-text-primary {
   color: var(--primary);
-  text-shadow: 0 0 8px var(--primary), 0 0 15px rgba(255, 45, 120, 0.4);
 }
 
 .neon-text-secondary {
   color: var(--secondary);
-  text-shadow: 0 0 8px var(--secondary), 0 0 15px rgba(0, 255, 204, 0.4);
 }
 
 .neon-text-tertiary {
   color: var(--tertiary);
-  text-shadow: 0 0 8px var(--tertiary), 0 0 15px rgba(255, 224, 74, 0.4);
 }
 
 .neon-border-primary {
@@ -197,7 +194,6 @@ h1, h2, h3, h4, h5, h6 {
   border-right: 4px solid var(--secondary);
   box-shadow: inset 0 0 10px rgba(0, 255, 204, 0.1);
   font-weight: 700;
-  text-shadow: 0 0 5px rgba(0, 255, 204, 0.4);
 }
 
 .sidebar-nav-link.active-primary {
@@ -206,7 +202,6 @@ h1, h2, h3, h4, h5, h6 {
   border-right: 4px solid var(--primary);
   box-shadow: inset 0 0 10px rgba(255, 45, 120, 0.1);
   font-weight: 700;
-  text-shadow: 0 0 5px rgba(255, 45, 120, 0.4);
 }
 
 .sidebar-footer {
@@ -258,7 +253,6 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--primary);
   border-bottom: 2px solid var(--primary);
   font-weight: 700;
-  text-shadow: 0 0 5px rgba(255, 45, 120, 0.5);
 }
 
 /* Main Content Area */
@@ -625,7 +619,6 @@ h1, h2, h3, h4, h5, h6 {
 
 .match-score-badge.played {
   color: var(--secondary);
-  text-shadow: 0 0 5px rgba(0, 255, 204, 0.5);
 }
 
 /* Modals */
