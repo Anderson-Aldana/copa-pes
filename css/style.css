@@ -658,7 +658,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   overflow-x: auto;
   position: relative;
-  padding: 2rem 0;
+  padding: 0.5rem 0;
   flex: 1;
 }
 
@@ -669,7 +669,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   min-width: 900px;
   position: relative;
-  min-height: 520px;
+  min-height: 420px;
 }
 
 .bracket-col {
@@ -677,9 +677,9 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   justify-content: space-around;
   height: 100%;
-  width: 250px;
+  width: 220px;
   z-index: 10;
-  gap: 2rem;
+  gap: 1rem;
 }
 
 /* Flag style helpers */

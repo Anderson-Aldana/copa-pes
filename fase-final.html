@@ -74,7 +74,7 @@
         <!-- Main Content Area -->
         <main class="main-content">
             <!-- Header -->
-            <header class="page-header" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: 1.25rem;">
+            <header class="page-header" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: 0.75rem; margin-bottom: 1rem;">
                 <div>
                     <h2 class="page-title text-on-surface tracking-tight mb-2" style="font-size: 2rem;">Copa PES <span class="neon-text-primary">Fase Final</span></h2>
                     <p class="page-subtitle">El camino a la gloria cibernética. Eliminación directa.</p>
@@ -86,7 +86,7 @@
             </header>
 
             <!-- Champion Banner Card (Hidden initially) -->
-            <section id="championCard" class="hidden card" style="border: 2px solid var(--tertiary); max-width: 750px; margin: 0 auto 2rem auto; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 0 30px rgba(255,224,74,0.15); animation: blink 2s infinite;">
+            <section id="championCard" class="hidden card" style="border: 2px solid var(--tertiary); max-width: 600px; margin: 0 auto 1rem auto; padding: 1rem; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 0 20px rgba(255,224,74,0.1); animation: blink 2s infinite;">
                 <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,224,74,0.06), transparent); pointer-events: none;"></div>
                 <div class="absolute w-48 h-48 bg-tertiary/10 rounded-full blur-2xl z-0 pointer-events-none trophy-glow"></div>
                 
@@ -105,7 +105,7 @@
             <!-- Bracket Wrapper -->
             <div class="bracket-scroll-wrapper" id="bracketWrapper">
                 <!-- SVG Canvas for connecting lines -->
-                <svg id="bracketSvg" class="absolute inset-0 w-full h-full pointer-events-none z-0 min-w-[800px]" style="min-height: 520px; z-index:0;"></svg>
+                <svg id="bracketSvg" class="absolute inset-0 w-full h-full pointer-events-none z-0 min-w-[800px]" style="min-height: 420px; z-index:0;"></svg>
                 
                 <!-- Dynamic Columns -->
                 <div class="bracket-container" id="bracketColumns">
@@ -305,34 +305,34 @@
                 const renderTeam = (team, score, isWinner, penalties) => {
                     if (!team) {
                         return `
-                            <div style="padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; opacity: 0.35;">
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <div style="width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 1px dashed var(--outline-variant); display: flex; align-items: center; justify-content: center;">
-                                        <span class="material-symbols-outlined" style="font-size: 0.8rem; color: var(--outline-variant);">help</span>
+                            <div style="padding: 0.35rem 0.6rem; display: flex; align-items: center; justify-content: space-between; opacity: 0.35;">
+                                <div style="display: flex; align-items: center; gap: 0.4rem;">
+                                    <div style="width: 1.3rem; height: 1.3rem; border-radius: 50%; border: 1px dashed var(--outline-variant); display: flex; align-items: center; justify-content: center;">
+                                        <span class="material-symbols-outlined" style="font-size: 0.7rem; color: var(--outline-variant);">help</span>
                                     </div>
-                                    <span class="font-headline font-bold text-xs" style="color: var(--on-surface-variant);">TBD</span>
+                                    <span class="font-headline font-bold" style="color: var(--on-surface-variant); font-size: 0.7rem;">TBD</span>
                                 </div>
-                                <span class="font-headline font-bold text-xs">--</span>
+                                <span class="font-headline font-bold" style="font-size: 0.7rem;">--</span>
                             </div>
                         `;
                     }
-                    const flagImg = `<img src="https://flagcdn.com/w40/${team.code}.png" class="flag-img" style="width: 1.15rem; height: 0.75rem;">`;
+                    const flagImg = `<img src="https://flagcdn.com/w40/${team.code}.png" class="flag-img" style="width: 1.1rem; height: 0.7rem;">`;
                     const winnerGlow = isWinner ? 'text-secondary neon-text-secondary font-bold' : 'text-on-surface-variant';
                     const scoreDisplay = score !== null ? score : '-';
-                    const penDisplay = penalties !== null ? `<span style="font-size: 0.65rem; color: var(--tertiary); font-family: var(--font-label); margin-left: 0.25rem;">(${penalties})</span>` : '';
+                    const penDisplay = penalties !== null ? `<span style="font-size: 0.6rem; color: var(--tertiary); font-family: var(--font-label); margin-left: 0.2rem;">(${penalties})</span>` : '';
 
                     return `
-                        <div style="padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; transition: background 0.25s; background-color: ${
+                        <div style="padding: 0.35rem 0.6rem; display: flex; align-items: center; justify-content: space-between; transition: background 0.25s; background-color: ${
                             isWinner ? 'rgba(0,255,204,0.03)' : 'transparent'
                         }; border-left: 2px solid ${isWinner ? 'var(--secondary)' : 'transparent'};">
-                            <div style="display: flex; align-items: center; gap: 0.5rem; overflow: hidden; flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 0.4rem; overflow: hidden; flex: 1;">
                                 ${flagImg}
                                 <div style="display: flex; flex-direction: column; overflow: hidden;">
-                                    <span style="font-family: var(--font-headline); font-weight: 700; color: var(--on-surface); font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${team.name}</span>
-                                    <span class="font-label" style="font-size: 0.55rem; color: var(--on-surface-variant); text-transform: uppercase; margin-top: -0.1rem; letter-spacing: 0.02em;">${team.playerName}</span>
+                                    <span style="font-family: var(--font-headline); font-weight: 700; color: var(--on-surface); font-size: 0.72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${team.name}</span>
+                                    <span class="font-label" style="font-size: 0.52rem; color: var(--on-surface-variant); text-transform: uppercase; margin-top: -0.1rem; letter-spacing: 0.02em;">${team.playerName}</span>
                                 </div>
                             </div>
-                            <div class="font-headline font-black text-xs ${winnerGlow}" style="display: flex; align-items: center;">
+                            <div class="font-headline font-black ${winnerGlow}" style="display: flex; align-items: center; font-size: 0.72rem;">
                                 ${scoreDisplay}
                                 ${penDisplay}
                             </div>
@@ -354,9 +354,9 @@
                 }
 
                 card.innerHTML = `
-                    <div style="padding: 0.35rem 0.75rem; background-color: rgba(30, 30, 48, 0.6); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
-                        <span class="font-label uppercase tracking-widest" style="font-size: 0.55rem; font-weight: 700; color: var(--on-surface-variant);">${roundLabel}</span>
-                        <span class="font-label uppercase tracking-wider" style="font-size: 0.5rem; font-weight: 700; ${labelStyle}">${stateLabel}</span>
+                    <div style="padding: 0.2rem 0.5rem; background-color: rgba(30, 30, 48, 0.6); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+                        <span class="font-label uppercase tracking-widest" style="font-size: 0.5rem; font-weight: 700; color: var(--on-surface-variant);">${roundLabel}</span>
+                        <span class="font-label uppercase tracking-wider" style="font-size: 0.45rem; font-weight: 700; ${labelStyle}">${stateLabel}</span>
                     </div>
                     <div style="display: flex; flex-direction: column;">
                         ${renderTeam(m.home, m.homeScore, isHomeWinner, m.homePenalties)}
