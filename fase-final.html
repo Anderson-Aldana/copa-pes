@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Copa PES - Fase Final</title>
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <!-- Custom Pure CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="scanline-bg">
+    <!-- TopNavBar (Mobile Only) -->
+    <nav class="mobile-header">
+        <div class="neon-text-primary" style="font-family: var(--font-headline); font-weight: 900; font-size: 1.5rem; font-style: italic; letter-spacing: -0.05em;">Copa PES</div>
+        <div class="flex items-center gap-4">
+            <button onclick="resetTournament()" class="btn btn-xs btn-primary">
+                <span class="material-symbols-outlined" style="font-size: 1.25rem;">restart_alt</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Top Nav Links (Scrollable) -->
+    <div class="mobile-nav-scroll">
+        <a class="mobile-nav-link" href="index.html">Sorteo</a>
+        <a class="mobile-nav-link" href="fase-de-grupos.html">Grupos</a>
+        <a class="mobile-nav-link" href="partidos.html">Partidos</a>
+        <a class="mobile-nav-link" href="tabla.html">Tabla</a>
+        <a class="mobile-nav-link active" href="fase-final.html">Fase Final</a>
+    </div>
+
+    <div class="app-container">
+        <!-- SideNavBar (Desktop) -->
+        <aside class="desktop-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon primary">
+                    <span class="material-symbols-outlined text-primary" style="font-size: 1.75rem;">emoji_events</span>
+                </div>
+                <div>
+                    <h1 class="neon-text-primary" style="font-size: 1.25rem; letter-spacing: 0.1em; font-weight: 900; text-align: center;">Copa PES</h1>
+                    <p class="text-xs font-label text-on-surface-variant uppercase text-center" style="font-size: 0.65rem; margin-top: 0.25rem;">Fase Final</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a class="sidebar-nav-link" href="index.html">
+                    <span class="material-symbols-outlined">casino</span>
+                    <span class="">Sorteo</span>
+                </a>
+                <a class="sidebar-nav-link" href="fase-de-grupos.html">
+                    <span class="material-symbols-outlined">group</span>
+                    <span class="">Grupos</span>
+                </a>
+                <a class="sidebar-nav-link" href="partidos.html">
+                    <span class="material-symbols-outlined">sports_soccer</span>
+                    <span class="">Partidos</span>
+                </a>
+                <a class="sidebar-nav-link" href="tabla.html">
+                    <span class="material-symbols-outlined">leaderboard</span>
+                    <span class="">Tabla</span>
+                </a>
+                <a class="sidebar-nav-link active-primary" href="fase-final.html">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">emoji_events</span>
+                    <span class="">Fase Final</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="resetTournament()" class="btn btn-primary w-full" style="padding: 0.6rem; font-size: 0.75rem;">
+                    Reiniciar
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="page-header" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: 1.25rem;">
+                <div>
+                    <h2 class="page-title text-on-surface tracking-tight mb-2" style="font-size: 2rem;">Copa PES <span class="neon-text-primary">Fase Final</span></h2>
+                    <p class="page-subtitle">El camino a la gloria cibernética. Eliminación directa.</p>
+                </div>
+                <div class="status-pill active primary" style="align-self: flex-start;">
+                    <div class="indicator-dot"></div>
+                    <span class="font-label text-xs uppercase tracking-widest text-primary">Live</span>
+                </div>
+            </header>
+
+            <!-- Champion Banner Card (Hidden initially) -->
+            <section id="championCard" class="hidden card" style="border: 2px solid var(--tertiary); max-width: 750px; margin: 0 auto 2rem auto; display: flex; flex-direction: column; align-items: center; text-align: center; box-shadow: 0 0 30px rgba(255,224,74,0.15); animation: blink 2s infinite;">
+                <div style="position: absolute; inset: 0; background: radial-gradient(circle at center, rgba(255,224,74,0.06), transparent); pointer-events: none;"></div>
+                <div class="absolute w-48 h-48 bg-tertiary/10 rounded-full blur-2xl z-0 pointer-events-none trophy-glow"></div>
+                
+                <span class="material-symbols-outlined text-tertiary drop-shadow-[0_0_15px_rgba(255,224,74,0.8)] relative z-10" style="font-size: 4rem; margin-bottom: 0.5rem; font-variation-settings: 'FILL' 1;">trophy</span>
+                <h3 class="font-label text-tertiary uppercase tracking-widest neon-text-tertiary relative z-10" style="font-size: 1.5rem; font-weight: 800;">¡TENEMOS UN CAMPEÓN!</h3>
+                
+                <div style="display: flex; align-items: center; gap: 1rem; margin-top: 1.5rem; background-color: var(--surface-dim); padding: 1rem 2rem; border-radius: 0.75rem; border: 1px solid rgba(255,224,74,0.2); position: relative; z-index: 10;">
+                    <img id="championFlag" src="https://flagcdn.com/w80/br.png" class="flag-img" style="width: 2.2rem; height: 1.45rem;">
+                    <div style="text-align: left;">
+                        <h4 class="font-headline text-on-surface uppercase tracking-wide" id="championTeam" style="font-size: 1.5rem; font-weight: 900; line-height: 1;">BRASIL</h4>
+                        <p class="font-label text-tertiary uppercase tracking-widest" style="font-size: 0.65rem; margin-top: 0.2rem;">Representado por <span id="championPlayer" class="font-bold">Carlos</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bracket Wrapper -->
+            <div class="bracket-scroll-wrapper" id="bracketWrapper">
+                <!-- SVG Canvas for connecting lines -->
+                <svg id="bracketSvg" class="absolute inset-0 w-full h-full pointer-events-none z-0 min-w-[800px]" style="min-height: 520px; z-index:0;"></svg>
+                
+                <!-- Dynamic Columns -->
+                <div class="bracket-container" id="bracketColumns">
+                    <!-- Columns dynamic -->
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <footer style="margin-top: auto; padding: 1.5rem 0; border-top: 1px solid var(--outline-variant); text-align: center;">
+                <div class="text-xs font-label text-tertiary">
+                    © 2026 NEON TOKYO SPORTS SYSTEM
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Match Scoring Modal Pop-up -->
+    <div id="scoreModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button onclick="closeModal()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--on-surface-variant); cursor: pointer;" onmouseover="this.style.color='var(--error)'" onmouseout="this.style.color='var(--on-surface-variant)'">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+            
+            <h3 class="font-label text-secondary text-xs tracking-widest uppercase mb-6 flex items-center gap-2 neon-text-secondary" style="font-weight: 700; margin-bottom: 1.5rem;">
+                <span class="material-symbols-outlined" style="font-size: 0.95rem;">terminal</span> REGISTRO ELIMINACIÓN DIRECTA
+            </h3>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 1.5rem;">
+                <!-- Team A -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 40%; text-align: center;">
+                    <img id="mHomeFlag" src="https://flagcdn.com/w80/ar.png" class="flag-img" style="width: 3.5rem; height: 2.25rem;">
+                    <span id="mHomeName" class="font-headline font-bold text-sm" style="color: var(--on-surface); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; display: block; margin-top: 0.25rem;">ARGENTINA</span>
+                    <span id="mHomePlayer" class="font-label text-on-surface-variant uppercase tracking-wider" style="font-size: 0.6rem; display: block; margin-top: -0.2rem;">PLAYER</span>
+                    <input id="mHomeScore" type="number" min="0" class="cyber-input neon-text-secondary" style="width: 4.5rem; font-size: 1.75rem; font-weight: 800; text-align: center; padding: 0.4rem 0; margin-top: 0.5rem;">
+                </div>
+                
+                <span class="font-label text-tertiary font-bold text-sm tracking-widest neon-text-tertiary">VS</span>
+                
+                <!-- Team B -->
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem; width: 40%; text-align: center;">
+                    <img id="mAwayFlag" src="https://flagcdn.com/w80/br.png" class="flag-img" style="width: 3.5rem; height: 2.25rem;">
+                    <span id="mAwayName" class="font-headline font-bold text-sm" style="color: var(--on-surface); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; display: block; margin-top: 0.25rem;">BRASIL</span>
+                    <span id="mAwayPlayer" class="font-label text-on-surface-variant uppercase tracking-wider" style="font-size: 0.6rem; display: block; margin-top: -0.2rem;">PLAYER</span>
+                    <input id="mAwayScore" type="number" min="0" class="cyber-input neon-text-secondary" style="width: 4.5rem; font-size: 1.75rem; font-weight: 800; text-align: center; padding: 0.4rem 0; margin-top: 0.5rem;">
+                </div>
+            </div>
+
+            <!-- Penalties Section (Hidden by default, shown if tie) -->
+            <div id="penaltiesSection" class="hidden" style="background-color: rgba(255,45,120,0.05); border: 1px solid rgba(255,45,120,0.2); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; display: flex; flex-direction: column; align-items: center; animation: fadeIn 0.3s ease-out forwards;">
+                <h4 class="text-primary font-headline uppercase tracking-widest neon-text-primary" style="font-size: 0.65rem; font-weight: 900; margin-bottom: 0.75rem;">Tanda de Penales Obligatoria</h4>
+                <div style="display: flex; justify-content: space-around; align-items: center; width: 100%; gap: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 0.4rem;">
+                        <span class="font-label text-on-surface-variant text-xs">Pen. Local:</span>
+                        <input id="mHomePenalties" type="number" min="0" class="cyber-input" style="width: 3rem; font-size: 1.15rem; font-weight: 800; text-align: center; padding: 0.2rem 0; color: var(--primary);">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.4rem;">
+                        <span class="font-label text-on-surface-variant text-xs">Pen. Visita:</span>
+                        <input id="mAwayPenalties" type="number" min="0" class="cyber-input" style="width: 3rem; font-size: 1.15rem; font-weight: 800; text-align: center; padding: 0.2rem 0; color: var(--primary);">
+                    </div>
+                </div>
+                <p class="font-label" style="font-size: 0.55rem; color: var(--on-surface-variant); margin-top: 0.5rem; text-align: center; opacity: 0.8;">Los penales deciden el ganador. No pueden quedar empatados.</p>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <button onclick="transmitModalMatch()" class="btn btn-xs btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.75rem;">
+                    Pantalla Gigante
+                </button>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button onclick="closeModal()" class="btn btn-xs" style="border: 1px solid var(--outline); color: var(--on-surface-variant); padding: 0.5rem 1rem; font-size: 0.75rem;" onmouseover="this.style.backgroundColor='var(--surface-variant)'" onmouseout="this.style.backgroundColor='transparent'">
+                        Cancelar
+                    </button>
+                    <button onclick="saveModalScore()" class="btn btn-xs btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.75rem; font-weight: 700; box-shadow: 0 0 10px rgba(255,45,120,0.2);">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let state = loadState();
+        let activeMatch = null;
+        let activeRound = "";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkPhaseRedirect();
+            renderBracket();
+            window.addEventListener('resize', drawConnectionLines);
+            setTimeout(drawConnectionLines, 300);
+        });
+
+        function renderBracket() {
+            const columnsContainer = document.getElementById('bracketColumns');
+            columnsContainer.innerHTML = '';
+
+            if (!state.bracket || (!state.bracket.sf.length && !state.bracket.final.length)) {
+                columnsContainer.innerHTML = `
+                    <div style="grid-column: 1 / -1; width: 100%; text-align: center; color: var(--on-surface-variant); opacity: 0.6; py: 4rem 0; padding: 4rem 0; border: 2px dashed rgba(255,255,255,0.05); border-radius: 0.75rem; background: var(--surface-container-low);">
+                        <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 0.5rem;">schema</span>
+                        <p style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-headline);">La Fase Final aún no ha sido generada.</p>
+                        <p class="text-xs" style="margin-top: 0.25rem;">Completa todos los partidos de grupos para avanzar.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const showR16 = state.bracket.r16.length > 0;
+            const showQF = state.bracket.qf.length > 0;
+            const showSF = state.bracket.sf.length > 0;
+            const showFinal = state.bracket.final.length > 0;
+
+            const championCard = document.getElementById('championCard');
+            if (state.champion && state.currentPhase === 'campeon') {
+                championCard.classList.remove('hidden');
+                document.getElementById('championFlag').src = `https://flagcdn.com/w80/${state.champion.code}.png`;
+                document.getElementById('championTeam').textContent = state.champion.name;
+                document.getElementById('championPlayer').textContent = state.champion.playerName;
+            } else {
+                championCard.classList.add('hidden');
+            }
+
+            const cols = [];
+            const countCols = 7;
+            for (let i = 0; i < countCols; i++) {
+                const colDiv = document.createElement('div');
+                colDiv.className = "bracket-col";
+                cols.push(colDiv);
+            }
+
+            if (showR16) {
+                renderMatchCards(cols[0], state.bracket.r16.slice(0, 4), "r16", "Octavos");
+                renderMatchCards(cols[6], state.bracket.r16.slice(4, 8), "r16", "Octavos");
+            } else {
+                cols[0].classList.add('hidden');
+                cols[6].classList.add('hidden');
+            }
+
+            if (showQF) {
+                renderMatchCards(cols[1], state.bracket.qf.slice(0, 2), "qf", "Cuartos");
+                renderMatchCards(cols[5], state.bracket.qf.slice(2, 4), "qf", "Cuartos");
+            } else {
+                cols[1].classList.add('hidden');
+                cols[5].classList.add('hidden');
+            }
+
+            if (showSF) {
+                renderMatchCards(cols[2], state.bracket.sf.slice(0, 1), "sf", "Semis");
+                renderMatchCards(cols[4], state.bracket.sf.slice(1, 2), "sf", "Semis");
+            } else {
+                cols[2].classList.add('hidden');
+                cols[4].classList.add('hidden');
+            }
+
+            if (showFinal) {
+                const trophyDiv = document.createElement('div');
+                trophyDiv.style.display = 'flex';
+                trophyDiv.style.flexDirection = 'column';
+                trophyDiv.style.alignItems = 'center';
+                trophyDiv.style.marginBottom = '1rem';
+                trophyDiv.style.position = 'relative';
+                trophyDiv.style.zIndex = '10';
+                trophyDiv.innerHTML = `
+                    <div style="position: absolute; width: 140px; height: 140px; background-color: rgba(255,224,74,0.06); border-radius: 50%; filter: blur(20px); z-index: 0; pointer-events: none;" class="trophy-glow"></div>
+                    <span class="material-symbols-outlined text-tertiary drop-shadow-[0_0_10px_rgba(255,224,74,0.8)]" style="font-size: 3rem; position: relative; z-index: 10; font-variation-settings: 'FILL' 1;">trophy</span>
+                    <span class="font-headline font-bold text-tertiary" style="font-size: 0.65rem; letter-spacing: 0.2em; margin-top: 0.25rem; text-shadow: 0 0 5px rgba(255,224,74,0.4); position: relative; z-index: 10;">GRAN FINAL</span>
+                `;
+                cols[3].appendChild(trophyDiv);
+                
+                renderMatchCards(cols[3], state.bracket.final, "final", "Final");
+            }
+
+            cols.forEach(c => {
+                if (!c.classList.contains('hidden')) {
+                    columnsContainer.appendChild(c);
+                }
+            });
+
+            setTimeout(drawConnectionLines, 100);
+        }
+
+        function renderMatchCards(columnEl, matches, round, roundLabel) {
+            matches.forEach(m => {
+                const card = document.createElement('div');
+                card.id = `card_${m.id}`;
+                card.className = `card`;
+                card.style.padding = '0';
+                card.style.border = '1px solid ' + (m.played ? 'rgba(0,255,204,0.3)' : 'var(--outline-variant)');
+                card.style.boxShadow = m.played ? '0 0 12px rgba(0,255,204,0.04)' : 'none';
+                card.style.cursor = 'pointer';
+                card.style.width = '100%';
+                card.style.transition = 'all 0.25s ease';
+                card.onmouseover = () => { card.style.transform = 'translateY(-2px)'; card.style.borderColor = 'rgba(0,255,204,0.4)'; };
+                card.onmouseout = () => { card.style.transform = 'translateY(0)'; card.style.borderColor = m.played ? 'rgba(0,255,204,0.3)' : 'var(--outline-variant)'; };
+                card.onclick = () => openScoreModal(m, round);
+
+                const renderTeam = (team, score, isWinner, penalties) => {
+                    if (!team) {
+                        return `
+                            <div style="padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; opacity: 0.35;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 1px dashed var(--outline-variant); display: flex; align-items: center; justify-content: center;">
+                                        <span class="material-symbols-outlined" style="font-size: 0.8rem; color: var(--outline-variant);">help</span>
+                                    </div>
+                                    <span class="font-headline font-bold text-xs" style="color: var(--on-surface-variant);">TBD</span>
+                                </div>
+                                <span class="font-headline font-bold text-xs">--</span>
+                            </div>
+                        `;
+                    }
+                    const flagImg = `<img src="https://flagcdn.com/w40/${team.code}.png" class="flag-img" style="width: 1.15rem; height: 0.75rem;">`;
+                    const winnerGlow = isWinner ? 'text-secondary neon-text-secondary font-bold' : 'text-on-surface-variant';
+                    const scoreDisplay = score !== null ? score : '-';
+                    const penDisplay = penalties !== null ? `<span style="font-size: 0.65rem; color: var(--tertiary); font-family: var(--font-label); margin-left: 0.25rem;">(${penalties})</span>` : '';
+
+                    return `
+                        <div style="padding: 0.6rem 0.8rem; display: flex; align-items: center; justify-content: space-between; transition: background 0.25s; background-color: ${
+                            isWinner ? 'rgba(0,255,204,0.03)' : 'transparent'
+                        }; border-left: 2px solid ${isWinner ? 'var(--secondary)' : 'transparent'};">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; overflow: hidden; flex: 1;">
+                                ${flagImg}
+                                <div style="display: flex; flex-direction: column; overflow: hidden;">
+                                    <span style="font-family: var(--font-headline); font-weight: 700; color: var(--on-surface); font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${team.name}</span>
+                                    <span class="font-label" style="font-size: 0.55rem; color: var(--on-surface-variant); text-transform: uppercase; margin-top: -0.1rem; letter-spacing: 0.02em;">${team.playerName}</span>
+                                </div>
+                            </div>
+                            <div class="font-headline font-black text-xs ${winnerGlow}" style="display: flex; align-items: center;">
+                                ${scoreDisplay}
+                                ${penDisplay}
+                            </div>
+                        </div>
+                    `;
+                };
+
+                const isHomeWinner = m.played && m.winner && m.winner.playerId === m.home?.playerId;
+                const isAwayWinner = m.played && m.winner && m.winner.playerId === m.away?.playerId;
+
+                let stateLabel = "Pendiente";
+                let labelStyle = "color: var(--on-surface-variant);";
+                if (m.played) {
+                    stateLabel = "Finalizado";
+                    labelStyle = "color: var(--secondary); text-shadow: 0 0 4px var(--secondary);";
+                } else if (m.home && m.away) {
+                    stateLabel = "Listo";
+                    labelStyle = "color: var(--tertiary); text-shadow: 0 0 4px var(--tertiary);";
+                }
+
+                card.innerHTML = `
+                    <div style="padding: 0.35rem 0.75rem; background-color: rgba(30, 30, 48, 0.6); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+                        <span class="font-label uppercase tracking-widest" style="font-size: 0.55rem; font-weight: 700; color: var(--on-surface-variant);">${roundLabel}</span>
+                        <span class="font-label uppercase tracking-wider" style="font-size: 0.5rem; font-weight: 700; ${labelStyle}">${stateLabel}</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        ${renderTeam(m.home, m.homeScore, isHomeWinner, m.homePenalties)}
+                        <div style="height: 1px; background-color: rgba(255,255,255,0.03);"></div>
+                        ${renderTeam(m.away, m.awayScore, isAwayWinner, m.awayPenalties)}
+                    </div>
+                `;
+
+                columnEl.appendChild(card);
+            });
+        }
+
+        function openScoreModal(match, round) {
+            if (!match.home || !match.away) {
+                alert("Este partido está esperando que finalicen rondas previas.");
+                return;
+            }
+
+            activeMatch = match;
+            activeRound = round;
+
+            document.getElementById('scoreModal').classList.remove('hidden');
+
+            document.getElementById('mHomeFlag').src = `https://flagcdn.com/w80/${match.home.code}.png`;
+            document.getElementById('mHomeName').textContent = match.home.name;
+            document.getElementById('mHomePlayer').textContent = match.home.playerName;
+            document.getElementById('mHomeScore').value = match.homeScore !== null ? match.homeScore : '';
+
+            document.getElementById('mAwayFlag').src = `https://flagcdn.com/w80/${match.away.code}.png`;
+            document.getElementById('mAwayName').textContent = match.away.name;
+            document.getElementById('mAwayPlayer').textContent = match.away.playerName;
+            document.getElementById('mAwayScore').value = match.awayScore !== null ? match.awayScore : '';
+
+            const penaltyBox = document.getElementById('penaltiesSection');
+            document.getElementById('mHomePenalties').value = match.homePenalties !== null ? match.homePenalties : '';
+            document.getElementById('mAwayPenalties').value = match.awayPenalties !== null ? match.awayPenalties : '';
+
+            const checkTie = () => {
+                const hScore = parseInt(document.getElementById('mHomeScore').value);
+                const aScore = parseInt(document.getElementById('mAwayScore').value);
+                if (!isNaN(hScore) && !isNaN(aScore) && hScore === aScore) {
+                    penaltyBox.classList.remove('hidden');
+                } else {
+                    penaltyBox.classList.add('hidden');
+                }
+            };
+
+            document.getElementById('mHomeScore').oninput = checkTie;
+            document.getElementById('mAwayScore').oninput = checkTie;
+
+            checkTie();
+        }
+
+        function closeModal() {
+            document.getElementById('scoreModal').classList.add('hidden');
+            activeMatch = null;
+            activeRound = "";
+        }
+
+        function saveModalScore() {
+            if (!activeMatch) return;
+
+            const homeScore = document.getElementById('mHomeScore').value;
+            const awayScore = document.getElementById('mAwayScore').value;
+            
+            let homePenalties = null;
+            let awayPenalties = null;
+
+            if (homeScore === '' || awayScore === '') {
+                alert("Debes rellenar ambos marcadores.");
+                return;
+            }
+
+            if (parseInt(homeScore) === parseInt(awayScore)) {
+                homePenalties = document.getElementById('mHomePenalties').value;
+                awayPenalties = document.getElementById('mAwayPenalties').value;
+                
+                if (homePenalties === '' || awayPenalties === '') {
+                    alert("Debe ingresar marcadores para los penales si empataron.");
+                    return;
+                }
+                if (parseInt(homePenalties) === parseInt(awayPenalties)) {
+                    alert("Los penales no pueden quedar empatados.");
+                    return;
+                }
+            }
+
+            const res = updateKnockoutScore(state, activeRound, activeMatch.id, homeScore, awayScore, homePenalties, awayPenalties);
+            if (res.success) {
+                state = loadState(); // Reload updated state
+                closeModal();
+                renderBracket();
+            } else {
+                alert(res.message);
+            }
+        }
+
+        function transmitModalMatch() {
+            if (!activeMatch) return;
+            setActiveMatch(state, activeMatch);
+            window.open("vista-de-partido.html", "_blank");
+        }
+
+        function drawConnectionLines() {
+            const svg = document.getElementById('bracketSvg');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const svgRect = svg.getBoundingClientRect();
+
+            function connectElements(parentCardId, childCardId, isRightSide) {
+                const parent = document.getElementById(parentCardId);
+                const child = document.getElementById(childCardId);
+                if (!parent || !child) return;
+
+                const pRect = parent.getBoundingClientRect();
+                const cRect = child.getBoundingClientRect();
+
+                let pX, pY, cX, cY;
+
+                if (!isRightSide) {
+                    pX = pRect.right - svgRect.left;
+                    pY = pRect.top - svgRect.top + pRect.height / 2;
+                    cX = cRect.left - svgRect.left;
+                    cY = cRect.top - svgRect.top + cRect.height / 2;
+                } else {
+                    pX = pRect.left - svgRect.left;
+                    pY = pRect.top - svgRect.top + pRect.height / 2;
+                    cX = cRect.right - svgRect.left;
+                    cY = cRect.top - svgRect.top + cRect.height / 2;
+                }
+
+                const parentMatchId = parentCardId.replace("card_", "");
+                let parentPlayed = false;
+                let childHasParentTeam = false;
+
+                let foundMatch = null;
+                const rounds = ["r16", "qf", "sf", "final"];
+                for (let r of rounds) {
+                    if (state.bracket[r]) {
+                        foundMatch = state.bracket[r].find(m => m.id === parentMatchId);
+                        if (foundMatch) break;
+                    }
+                }
+
+                if (foundMatch && foundMatch.played) {
+                    parentPlayed = true;
+                    const childMatchId = childCardId.replace("card_", "");
+                    let childMatch = null;
+                    for (let r of rounds) {
+                        if (state.bracket[r]) {
+                            childMatch = state.bracket[r].find(m => m.id === childMatchId);
+                            if (childMatch) break;
+                        }
+                    }
+                    if (childMatch && foundMatch.winner) {
+                        childHasParentTeam = (childMatch.home && childMatch.home.playerId === foundMatch.winner.playerId) ||
+                                             (childMatch.away && childMatch.away.playerId === foundMatch.winner.playerId);
+                    }
+                }
+
+                const isActiveLine = parentPlayed && childHasParentTeam;
+
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                const midX = pX + (cX - pX) / 2;
+                const d = `M ${pX} ${pY} L ${midX} ${pY} L ${midX} ${cY} L ${cX} ${cY}`;
+                
+                path.setAttribute("d", d);
+                path.setAttribute("fill", "none");
+                if (isActiveLine) {
+                    path.setAttribute("stroke", "#00ffcc");
+                    path.setAttribute("stroke-width", "2");
+                    path.setAttribute("style", "filter: drop-shadow(0 0 6px rgba(0,255,204,0.6));");
+                } else {
+                    path.setAttribute("stroke", "#302840");
+                    path.setAttribute("stroke-width", "2");
+                }
+                svg.appendChild(path);
+            }
+
+            if (state.bracket.r16.length > 0) {
+                connectElements("card_r16_m1", "card_qf_m1", false);
+                connectElements("card_r16_m2", "card_qf_m1", false);
+                connectElements("card_r16_m3", "card_qf_m2", false);
+                connectElements("card_r16_m4", "card_qf_m2", false);
+                
+                connectElements("card_r16_m5", "card_qf_m3", true);
+                connectElements("card_r16_m6", "card_qf_m3", true);
+                connectElements("card_r16_m7", "card_qf_m4", true);
+                connectElements("card_r16_m8", "card_qf_m4", true);
+            }
+
+            if (state.bracket.qf.length > 0) {
+                connectElements("card_qf_m1", "card_sf_m1", false);
+                connectElements("card_qf_m2", "card_sf_m1", false);
+                
+                connectElements("card_qf_m3", "card_sf_m2", true);
+                connectElements("card_qf_m4", "card_sf_m2", true);
+            }
+
+            if (state.bracket.sf.length > 0) {
+                connectElements("card_sf_m1", "card_final_m1", false);
+                connectElements("card_sf_m2", "card_final_m1", true);
+            }
+        }
+    </script>
+</body>
+</html>

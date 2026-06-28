@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Copa PES - Pantalla Gigante</title>
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <!-- Custom Pure CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="giant-screen-body">
+    <!-- Cyberpunk Animated Background Image -->
+    <div class="giant-screen-bg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBJNxdZn_v03i7s5lYbuzlfr__mjSanCvIwP-OUAweZlKv_rXK2CcPEqXKj_y2w-rIb7jt-W7gBApIkZFdwP9xByR78kXd6ccw_Xq7X1pmZ8kkIL6e8l4JAJuCKTKMRRkIdvtjym3zkouHa1EI1dQHRbJlqEkLRh5T7w0zij0gBjIuLI3feGTil1ZySutTq0hfQJsaWpBXrul7Zl3YiRBocIOdPBLofIUhwNrKIBZW6upXZM6K5cuxL8F4FnwhLuVkp5BibHSv1WCGE');"></div>
+    <div class="absolute inset-0 z-0 bg-scanline pointer-events-none opacity-40"></div>
+    <div class="absolute inset-0 z-0 bg-gradient-to-t from-background via-transparent to-background/60 pointer-events-none"></div>
+
+    <!-- Top Header / Logo -->
+    <header class="giant-screen-header">
+        <div class="font-headline font-black text-2xl tracking-[0.3em] text-on-background neon-text-primary">Copa PES<span class="text-primary">.</span></div>
+    </header>
+
+    <!-- Main Scoreboard Canvas -->
+    <main class="giant-screen-main">
+        
+        <!-- No Active Match Overlay -->
+        <div id="noActiveMatch" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; position: relative; z-index: 30; padding: 2rem;">
+            <span class="material-symbols-outlined text-primary animate-pulse" style="font-size: 5rem; margin-bottom: 1rem;">tv_off</span>
+            <h2 class="neon-text-primary uppercase tracking-widest" style="font-size: 2.25rem; font-weight: 900; margin-bottom: 0.5rem;">PANTALLA DESCONECTADA</h2>
+            <p class="font-body text-on-surface-variant text-sm" style="max-width: 380px;">No hay ningún partido transmitiéndose en este momento. Selecciona "Transmitir Pantalla Gigante" desde el panel de partidos.</p>
+        </div>
+
+        <!-- Central Scoreboard Layout -->
+        <div id="activeMatchLayout" class="hidden" style="display: flex; flex-direction: column; width: 100%; justify-content: center; align-items: center; z-index: 10;">
+            
+            <!-- Live Indicator -->
+            <div class="giant-live-badge">
+                <span class="indicator-dot" style="width: 0.75rem; height: 0.75rem; border-radius: 50%; background-color: var(--primary); box-shadow: 0 0 10px var(--primary);" class="pulse-anim"></span>
+                <span class="font-label text-primary uppercase tracking-widest font-bold text-sm" id="liveStatus">EN JUEGO</span>
+            </div>
+
+            <!-- Team Rows -->
+            <div class="giant-layout-row">
+                <!-- Team 1 / Home -->
+                <div class="giant-team-card">
+                    <div class="giant-flag-frame secondary">
+                        <img id="mHomeFlagImg" class="giant-flag-img" src="https://flagcdn.com/w320/jp.png">
+                        <div class="giant-flag-overlay">
+                            <span id="mHomeFlagName" class="font-headline giant-flag-title text-on-background neon-text-secondary mix-blend-screen">JAPÓN</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel giant-player-box left">
+                        <div class="absolute inset-0 bg-gradient-to-r from-secondary/5 to-transparent opacity-50 pointer-events-none"></div>
+                        <p class="font-label text-on-surface-variant uppercase" style="font-size: 0.65rem; letter-spacing: 0.1em; margin-bottom: 0.25rem; font-weight: 700;">JUGADOR</p>
+                        <p id="mHomePlayerName" class="font-headline text-secondary font-bold" style="font-size: 1.5rem;">Alex</p>
+                    </div>
+                </div>
+                
+                <!-- Score Center -->
+                <div class="giant-score-center">
+                    <div class="giant-score-numbers">
+                        <span id="mHomeScoreText">0</span>
+                        <span class="giant-score-dash">-</span>
+                        <span id="mAwayScoreText">0</span>
+                    </div>
+                    
+                    <!-- Penalty shootout display -->
+                    <div id="mPenaltiesText" class="font-headline font-bold text-tertiary neon-text-tertiary uppercase tracking-widest hidden" style="font-size: 1.25rem; margin-top: 1rem; animation: blink 1.5s infinite;">
+                        Penales: <span id="mHomePenText">0</span> - <span id="mAwayPenText">0</span>
+                    </div>
+
+                    <div class="glass-panel" style="padding: 0.6rem 2rem; border-radius: 9999px; border-color: rgba(255,224,74,0.3); box-shadow: 0 0 20px rgba(255,224,74,0.05); margin-top: 2rem;">
+                        <p id="mLabelInfo" class="font-label text-tertiary uppercase font-bold text-xs" style="letter-spacing: 0.15em; text-shadow: 0 0 5px rgba(255,224,74,0.4);">FASE DE GRUPOS</p>
+                    </div>
+                </div>
+                
+                <!-- Team 2 / Away -->
+                <div class="giant-team-card">
+                    <div class="giant-flag-frame primary">
+                        <img id="mAwayFlagImg" class="giant-flag-img" src="https://flagcdn.com/w320/br.png">
+                        <div class="giant-flag-overlay">
+                            <span id="mAwayFlagName" class="font-headline giant-flag-title text-on-background neon-text-primary mix-blend-screen">BRASIL</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel giant-player-box right">
+                        <div class="absolute inset-0 bg-gradient-to-l from-primary/5 to-transparent opacity-50 pointer-events-none"></div>
+                        <p class="font-label text-on-surface-variant uppercase" style="font-size: 0.65rem; letter-spacing: 0.1em; margin-bottom: 0.25rem; font-weight: 700;">JUGADOR</p>
+                        <p id="mAwayPlayerName" class="font-headline text-primary font-bold" style="font-size: 1.5rem;">Carlos</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAndRenderActiveMatch();
+            
+            // Listen to storage events to sync in real time
+            window.addEventListener('storage', (e) => {
+                if (e.key === "copa_pes_state" || e.key === "copa_pes_active_trigger") {
+                    loadAndRenderActiveMatch();
+                }
+            });
+        });
+
+        function loadAndRenderActiveMatch() {
+            const state = loadState();
+            const layout = document.getElementById('activeMatchLayout');
+            const noMatch = document.getElementById('noActiveMatch');
+
+            if (!state.activeMatch) {
+                layout.classList.add('hidden');
+                noMatch.classList.remove('hidden');
+                return;
+            }
+
+            layout.classList.remove('hidden');
+            noMatch.classList.add('hidden');
+
+            const m = state.activeMatch;
+
+            // Render details
+            document.getElementById('mHomeFlagImg').src = `https://flagcdn.com/w320/${m.home.code}.png`;
+            document.getElementById('mHomeFlagName').textContent = m.home.name;
+            document.getElementById('mHomePlayerName').textContent = m.home.playerName;
+            document.getElementById('mHomeScoreText').textContent = m.homeScore !== null ? m.homeScore : '0';
+
+            document.getElementById('mAwayFlagImg').src = `https://flagcdn.com/w320/${m.away.code}.png`;
+            document.getElementById('mAwayFlagName').textContent = m.away.name;
+            document.getElementById('mAwayPlayerName').textContent = m.away.playerName;
+            document.getElementById('mAwayScoreText').textContent = m.awayScore !== null ? m.awayScore : '0';
+
+            // Check if penalties shootout
+            const penSection = document.getElementById('mPenaltiesText');
+            if (m.homePenalties !== null && m.awayPenalties !== null) {
+                penSection.classList.remove('hidden');
+                document.getElementById('mHomePenText').textContent = m.homePenalties;
+                document.getElementById('mAwayPenText').textContent = m.awayPenalties;
+            } else {
+                penSection.classList.add('hidden');
+            }
+
+            // Status label
+            const liveStatus = document.getElementById('liveStatus');
+            const dot = liveStatus.previousElementSibling;
+            if (m.played) {
+                liveStatus.textContent = "FINALIZADO";
+                liveStatus.className = "font-label text-secondary uppercase tracking-widest font-bold text-sm";
+                liveStatus.parentElement.style.borderColor = "rgba(0, 255, 204, 0.4)";
+                liveStatus.parentElement.style.boxShadow = "0 0 25px rgba(0, 255, 204, 0.15)";
+                if (dot) {
+                    dot.style.backgroundColor = "var(--secondary)";
+                    dot.style.boxShadow = "none";
+                    dot.classList.remove('pulse-anim');
+                }
+            } else {
+                liveStatus.textContent = "EN JUEGO";
+                liveStatus.className = "font-label text-primary uppercase tracking-widest font-bold text-sm pulse-anim";
+                liveStatus.parentElement.style.borderColor = "rgba(255, 45, 120, 0.4)";
+                liveStatus.parentElement.style.boxShadow = "0 0 25px rgba(255, 45, 120, 0.15)";
+                if (dot) {
+                    dot.style.backgroundColor = "var(--primary)";
+                    dot.style.boxShadow = "0 0 12px var(--primary)";
+                    dot.classList.add('pulse-anim');
+                }
+            }
+
+            const labelInfo = document.getElementById('mLabelInfo');
+            if (m.groupId) {
+                labelInfo.textContent = `FASE DE GRUPOS - GRUPO ${m.groupId}`;
+            } else {
+                const roundPrefix = m.id.split('_')[0];
+                if (roundPrefix === 'r16') {
+                    labelInfo.textContent = "OCTAVOS DE FINAL";
+                } else if (roundPrefix === 'qf') {
+                    labelInfo.textContent = "CUARTOS DE FINAL";
+                } else if (roundPrefix === 'sf') {
+                    labelInfo.textContent = "SEMIFINAL";
+                } else if (roundPrefix === 'final') {
+                    labelInfo.textContent = "GRAN FINAL";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

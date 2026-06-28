@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Copa PES - Fase de Grupos</title>
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <!-- Custom Pure CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- TopNavBar (Mobile Only) -->
+    <nav class="mobile-header">
+        <div class="neon-text-primary" style="font-family: var(--font-headline); font-weight: 900; font-size: 1.5rem; font-style: italic; letter-spacing: -0.05em;">Copa PES</div>
+        <div>
+            <button onclick="resetTournament()" class="btn btn-xs btn-primary">
+                <span class="material-symbols-outlined" style="font-size: 1.25rem;">restart_alt</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Top Nav Links (Scrollable) -->
+    <div class="mobile-nav-scroll">
+        <a class="mobile-nav-link" href="index.html">Sorteo</a>
+        <a class="mobile-nav-link active" href="fase-de-grupos.html">Grupos</a>
+        <a class="mobile-nav-link" href="partidos.html">Partidos</a>
+        <a class="mobile-nav-link" href="tabla.html">Tabla</a>
+        <a class="mobile-nav-link" href="fase-final.html">Fase Final</a>
+    </div>
+
+    <div class="app-container">
+        <!-- SideNavBar (Desktop Only) -->
+        <aside class="desktop-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">
+                    <span class="material-symbols-outlined text-secondary" style="font-size: 1.75rem;">emoji_events</span>
+                </div>
+                <div class="text-center">
+                    <h1 class="neon-text-secondary" style="font-size: 1.25rem; letter-spacing: 0.1em;">Copa PES</h1>
+                    <p class="font-label uppercase tracking-widest" style="font-size: 0.65rem; color: var(--on-surface-variant); margin-top: 0.25rem;">Fase de Grupos</p>
+                </div>
+            </div>
+            
+            <div style="padding: 0 1.5rem;">
+                <button onclick="resetTournament()" class="btn btn-primary w-full" style="padding: 0.6rem; font-size: 0.75rem;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem;">restart_alt</span>
+                    Reiniciar Torneo
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav" id="navLinks">
+                <a class="sidebar-nav-link" href="index.html">
+                    <span class="material-symbols-outlined">casino</span>
+                    <span>Sorteo</span>
+                </a>
+                <a class="sidebar-nav-link active" href="fase-de-grupos.html">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+                    <span>Grupos</span>
+                </a>
+                <a class="sidebar-nav-link" href="partidos.html">
+                    <span class="material-symbols-outlined">sports_soccer</span>
+                    <span>Partidos</span>
+                </a>
+                <a class="sidebar-nav-link" href="tabla.html">
+                    <span class="material-symbols-outlined">leaderboard</span>
+                    <span>Tabla</span>
+                </a>
+                <a class="sidebar-nav-link" href="fase-final.html">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span>Fase Final</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <header class="page-header">
+                <div>
+                    <h2 class="page-title text-on-surface uppercase tracking-tighter" style="font-size: 2.25rem;">Fase de <span class="neon-text-secondary">Grupos</span></h2>
+                    <p class="page-subtitle">El sorteo ha concluido. Conoce los grupos asignados y prepárate para los partidos.</p>
+                </div>
+                <div class="status-pill active" style="align-self: flex-start;">
+                    <div class="indicator-dot"></div>
+                    <span id="statusText">Fase Activa</span>
+                </div>
+            </header>
+
+            <!-- Bento Grid for Groups -->
+            <div class="grid-container" id="groupsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+                <!-- Dynamically generated groups will be injected here -->
+            </div>
+
+            <!-- Footer -->
+            <footer style="margin-top: auto; padding: 2rem 0; border-top: 1px solid var(--outline-variant); text-align: center;">
+                <div class="text-xs font-label text-tertiary">
+                    © 2026 NEON TOKYO SPORTS SYSTEM
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkPhaseRedirect();
+            renderGroups();
+        });
+
+        function renderGroups() {
+            const state = loadState();
+            const grid = document.getElementById('groupsGrid');
+            grid.innerHTML = '';
+
+            if (!state.groups || state.groups.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1 / -1; height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--on-surface-variant); opacity: 0.6; border: 2px dashed rgba(255,255,255,0.05); border-radius: 0.75rem; background: var(--surface-container-low);">
+                        <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 0.75rem;">grid_off</span>
+                        <p style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-headline);">No se han generado grupos.</p>
+                        <p class="text-xs mt-1" style="margin-top: 0.25rem;">Regresa a la pestaña de Sorteo para iniciar el torneo.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Alternating accents
+            const colorAccents = [
+                { textClass: 'neon-text-primary', borderClass: 'neon-border-primary', bgGlow: 'rgba(255,45,120,0.04)', icon: 'swords', iconColor: 'rgba(255,45,120,0.3)', headingColor: 'var(--primary)' },
+                { textClass: 'neon-text-secondary', borderClass: 'neon-border-secondary', bgGlow: 'rgba(0,255,204,0.04)', icon: 'shield', iconColor: 'rgba(0,255,204,0.3)', headingColor: 'var(--secondary)' },
+                { textClass: 'neon-text-tertiary', borderClass: 'neon-border-tertiary', bgGlow: 'rgba(255,224,74,0.04)', icon: 'bolt', iconColor: 'rgba(255,224,74,0.3)', headingColor: 'var(--tertiary)' }
+            ];
+
+            state.groups.forEach((group, index) => {
+                const accent = colorAccents[index % colorAccents.length];
+                
+                const playedCount = group.matches.filter(m => m.played).length;
+                const totalCount = group.matches.length;
+                const progressText = `Progreso: ${playedCount} / ${totalCount} Partidos`;
+
+                let teamsHTML = '';
+                group.teams.forEach(t => {
+                    teamsHTML += `
+                        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; background-color: rgba(30, 30, 48, 0.4); border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.02); transition: all 0.25s ease;" onmouseover="this.style.backgroundColor='rgba(30,30,48,0.7)'" onmouseout="this.style.backgroundColor='rgba(30,30,48,0.4)'">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <img src="https://flagcdn.com/w40/${t.code}.png" class="flag-img" style="width: 1.5rem; height: 1rem; border: 1px solid rgba(255,255,255,0.08);">
+                                <div style="display: flex; flex-direction: column;">
+                                    <span style="font-family: var(--font-headline); font-weight: 700; color: var(--on-surface); font-size: 0.9rem;">${t.name}</span>
+                                    <span class="font-label" style="font-size: 0.6rem; color: var(--on-surface-variant); letter-spacing: 0.05em; text-transform: uppercase; margin-top: -0.1rem;">Selección</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div style="text-align: right;">
+                                    <span class="font-headline font-bold text-xs" style="color: ${accent.headingColor}; text-shadow: 0 0 5px ${accent.headingColor}50;">${t.playerName}</span>
+                                    <span class="block font-label" style="font-size: 0.55rem; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.1em; margin-top: -0.1rem;">Jugador</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                const groupCard = document.createElement('article');
+                groupCard.className = `card low ${accent.borderClass}`;
+                groupCard.style.padding = '0'; // Custom card styling override for header grid look
+                groupCard.innerHTML = `
+                    <!-- Card Header -->
+                    <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, ${accent.bgGlow}, transparent);">
+                        <div>
+                            <h3 class="font-headline ${accent.textClass}" style="font-size: 1.75rem; font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase;">${group.name}</h3>
+                            <p class="font-label uppercase text-on-surface-variant tracking-wider" style="font-size: 0.65rem; margin-top: 0.2rem;">${progressText}</p>
+                        </div>
+                        <span class="material-symbols-outlined text-4xl" style="color: ${accent.iconColor}; font-size: 2.25rem;">${accent.icon}</span>
+                    </div>
+
+                    <!-- Team Rows -->
+                    <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; position: relative; z-index: 10;">
+                        ${teamsHTML}
+                    </div>
+                `;
+
+                grid.appendChild(groupCard);
+            });
+        }
+    </script>
+</body>
+</html>

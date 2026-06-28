@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Sorteo - TOKYO LEAGUE</title>
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <!-- Custom Pure CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- TopNavBar (Mobile Only) -->
+    <nav class="mobile-header">
+        <div class="neon-text-primary" style="font-family: var(--font-headline); font-weight: 900; font-size: 1.5rem; font-style: italic; letter-spacing: -0.05em;">Copa PES</div>
+        <div>
+            <button onclick="resetTournament()" class="btn btn-xs btn-primary">
+                <span class="material-symbols-outlined" style="font-size: 1.25rem;">restart_alt</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Top Nav Links (Scrollable) -->
+    <div class="mobile-nav-scroll">
+        <a class="mobile-nav-link active" href="index.html">Sorteo</a>
+        <a class="mobile-nav-link" id="mobile-link-grupos" href="fase-de-grupos.html">Grupos</a>
+        <a class="mobile-nav-link" id="mobile-link-partidos" href="partidos.html">Partidos</a>
+        <a class="mobile-nav-link" id="mobile-link-tabla" href="tabla.html">Tabla</a>
+        <a class="mobile-nav-link" id="mobile-link-fasefinal" href="fase-final.html">Fase Final</a>
+    </div>
+
+    <div class="app-container">
+        <!-- SideNavBar (Desktop Only) -->
+        <aside class="desktop-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">
+                    <span class="material-symbols-outlined text-secondary" style="font-size: 1.75rem;">emoji_events</span>
+                </div>
+                <div class="text-center">
+                    <h1 class="neon-text-secondary" style="font-size: 1.25rem; letter-spacing: 0.1em;">Copa PES</h1>
+                    <p class="font-label uppercase tracking-widest" style="font-size: 0.65rem; color: var(--on-surface-variant); margin-top: 0.25rem;">Configuración</p>
+                </div>
+            </div>
+            
+            <div style="padding: 0 1.5rem;">
+                <button onclick="resetTournament()" class="btn btn-primary w-full" style="padding: 0.6rem; font-size: 0.75rem;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem;">restart_alt</span>
+                    Reiniciar Torneo
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav" id="navLinks">
+                <a class="sidebar-nav-link active-primary" href="index.html">
+                    <span class="material-symbols-outlined">casino</span>
+                    <span>Sorteo</span>
+                </a>
+                <a class="sidebar-nav-link" id="link-grupos" href="fase-de-grupos.html">
+                    <span class="material-symbols-outlined">group</span>
+                    <span>Grupos</span>
+                </a>
+                <a class="sidebar-nav-link" id="link-partidos" href="partidos.html">
+                    <span class="material-symbols-outlined">sports_soccer</span>
+                    <span>Partidos</span>
+                </a>
+                <a class="sidebar-nav-link" id="link-tabla" href="tabla.html">
+                    <span class="material-symbols-outlined">leaderboard</span>
+                    <span>Tabla</span>
+                </a>
+                <a class="sidebar-nav-link" id="link-fasefinal" href="fase-final.html">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span>Fase Final</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Canvas -->
+        <main class="main-content">
+            <header class="page-header">
+                <div>
+                    <h2 class="page-title neon-text-primary" id="pageTitle">Sorteo Copa PES</h2>
+                    <p class="page-subtitle" id="pageSubtitle">Registra a los jugadores y asigna selecciones al azar.</p>
+                </div>
+            </header>
+
+            <div class="grid-container cols-12">
+                <!-- Left Panel: Registration & Player List -->
+                <section class="col-span-5" id="leftSection" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- Registration Form -->
+                    <div class="card neon-border-secondary" id="registrationCard">
+                        <h3 class="card-title neon-text-secondary">
+                            <span class="material-symbols-outlined">person_add</span>
+                            Añadir Jugador
+                        </h3>
+                        <div class="form-group">
+                            <input class="cyber-input" id="playerName" placeholder="Nombre del jugador" type="text" autocomplete="off">
+                            <div id="registrationMsg" class="text-xs text-error hidden"></div>
+                            <button class="btn btn-secondary w-full" id="addPlayerBtn" style="margin-top: 0.5rem;">
+                                <span class="material-symbols-outlined">add_circle</span>
+                                Registrar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Player List -->
+                    <div class="card" style="flex: 1; display: flex; flex-direction: column; min-height: 300px; border-color: var(--outline-variant);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                            <h3 class="font-label font-bold text-on-surface" style="font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="material-symbols-outlined text-tertiary">groups</span>
+                                Jugadores Registrados
+                            </h3>
+                            <span class="neon-text-tertiary font-label text-xs" id="playerCounter" style="background: rgba(255,224,74,0.1); padding: 0.2rem 0.5rem; border-radius: 4px;">0 / 32</span>
+                        </div>
+                        
+                        <div class="custom-scrollbar" id="playerList" style="flex: 1; overflow-y: auto; padding-right: 0.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                            <!-- Empty State -->
+                            <div id="emptyState" style="height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--on-surface-variant); opacity: 0.6; border: 2px dashed rgba(255,255,255,0.05); border-radius: 0.5rem;">
+                                <span class="material-symbols-outlined" style="font-size: 2rem; margin-bottom: 0.5rem;">person_off</span>
+                                <p class="text-xs">No hay jugadores registrados aún.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right Panel: Visualization / Group Draw -->
+                <section class="col-span-7" id="rightSection" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- Dynamic Draw Area -->
+                    <div class="card neon-border-primary" id="drawBox" style="flex: 1; min-height: 420px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(255,45,120,0.06), transparent); pointer-events: none;"></div>
+                        
+                        <div class="text-center w-full" id="drawContent" style="position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center;">
+                            <!-- Phase 1: Draw country trigger -->
+                            <div id="drawPhaseCountry" style="display: flex; flex-direction: column; align-items: center;">
+                                <span class="material-symbols-outlined text-primary" style="font-size: 4rem; margin-bottom: 1.5rem; filter: drop-shadow(0 0 10px var(--primary));">public</span>
+                                <h3 style="font-size: 1.75rem; font-weight: 800; color: var(--on-surface); margin-bottom: 0.5rem;">Sorteo de Selecciones</h3>
+                                <p class="page-subtitle" style="margin-bottom: 2rem; max-width: 380px; font-size: 0.875rem;">Asigna un país al azar a cada jugador registrado. Se requieren mínimo 3 jugadores.</p>
+                                <button onclick="startCountryDrawAnimation()" class="btn btn-pill btn-primary" id="drawTeamsBtn">
+                                    <span class="material-symbols-outlined">shuffle</span>
+                                    Realizar Sorteo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Config indicator footer panel -->
+                    <div class="card" style="padding: 1rem; display: flex; gap: 1rem; overflow-x: auto; border-color: var(--outline-variant);">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; background-color: var(--surface-variant); padding: 0.5rem 1rem; border-radius: 0.5rem; white-space: nowrap;">
+                            <span class="material-symbols-outlined text-secondary" style="font-size: 1.1rem;">settings</span>
+                            <span class="font-label text-xs" id="infoMinMax">Min: 3 / Max: 32 Jugadores</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.5rem; background-color: var(--surface-variant); padding: 0.5rem 1rem; border-radius: 0.5rem; white-space: nowrap;">
+                            <span class="material-symbols-outlined text-tertiary" style="font-size: 1.1rem;">shuffle</span>
+                            <span class="font-label text-xs">Asignación 100% Aleatoria</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let state = loadState();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkPhaseRedirect();
+            renderInitialUI();
+
+            const input = document.getElementById('playerName');
+            const addBtn = document.getElementById('addPlayerBtn');
+
+            addBtn.addEventListener('click', () => {
+                const name = input.value.trim();
+                const res = addPlayer(state, name);
+                const msgBox = document.getElementById('registrationMsg');
+                
+                if (res.success) {
+                    msgBox.classList.add('hidden');
+                    input.value = '';
+                    renderPlayerList();
+                    updateDrawButtonState();
+                } else {
+                    msgBox.textContent = res.message;
+                    msgBox.classList.remove('hidden');
+                }
+            });
+
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addBtn.click();
+            });
+        });
+
+        function renderInitialUI() {
+            renderPlayerList();
+            updateDrawButtonState();
+            updateNavigationLinks();
+
+            if (state.currentPhase === "grupos_sorteo") {
+                renderGroupDrawUI();
+            }
+        }
+
+        function updateNavigationLinks() {
+            const hasGroups = state.groups && state.groups.length > 0;
+
+            const ids = ["link-grupos", "link-partidos", "link-tabla", "link-fasefinal", "mobile-link-grupos", "mobile-link-partidos"];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (hasGroups) {
+                        el.style.opacity = '1';
+                        el.style.pointerEvents = 'auto';
+                    } else {
+                        el.style.opacity = '0.4';
+                        el.style.pointerEvents = 'none';
+                    }
+                }
+            });
+        }
+
+        function renderPlayerList() {
+            const list = document.getElementById('playerList');
+            const counter = document.getElementById('playerCounter');
+
+            if (state.players.length === 0) {
+                list.innerHTML = `
+                    <div id="emptyState" style="height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--on-surface-variant); opacity: 0.6; border: 2px dashed rgba(255,255,255,0.05); border-radius: 0.5rem;">
+                        <span class="material-symbols-outlined" style="font-size: 2rem; margin-bottom: 0.5rem;">person_off</span>
+                        <p class="text-xs">No hay jugadores registrados aún.</p>
+                    </div>
+                `;
+                counter.textContent = "0 / 32";
+                return;
+            }
+
+            list.innerHTML = '';
+
+            state.players.forEach((player, index) => {
+                const item = document.createElement('div');
+                item.className = 'match-item';
+                item.style.cursor = 'default';
+                item.style.animation = 'fadeIn 0.3s ease-out forwards';
+                
+                let teamInfo = '';
+                if (player.team) {
+                    teamInfo = `
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem; background: rgba(255,45,120,0.1); padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid rgba(255,45,120,0.2);">
+                            <img src="https://flagcdn.com/w40/${player.team.code}.png" class="flag-img" style="width: 1.25rem; height: 0.8rem;">
+                            <span class="font-label uppercase text-primary font-bold text-xs" style="letter-spacing: 0.05em;">${player.team.name}</span>
+                        </div>
+                    `;
+                }
+
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
+                        <div style="width: 2rem; height: 2rem; border-radius: 4px; background: rgba(0,255,204,0.1); display: flex; align-items: center; justify-content: center; text-align: center; color: var(--secondary); font-family: var(--font-headline); font-weight: 800; font-size: 0.875rem; border: 1px solid rgba(0,255,204,0.2);">${index + 1}</div>
+                        <span style="font-weight: 600; color: var(--on-surface); font-size: 0.95rem;">${player.name}</span>
+                        ${teamInfo}
+                    </div>
+                    ${state.currentPhase === 'sorteo' ? `
+                        <button onclick="deletePlayer('${player.id}')" style="background: none; border: none; color: var(--on-surface-variant); cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='var(--error)'" onmouseout="this.style.color='var(--on-surface-variant)'">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem;">close</span>
+                        </button>
+                    ` : ''}
+                `;
+                list.appendChild(item);
+            });
+
+            counter.textContent = `${state.players.length} / 32`;
+        }
+
+        function deletePlayer(id) {
+            state = removePlayer(state, id);
+            renderPlayerList();
+            updateDrawButtonState();
+        }
+
+        function updateDrawButtonState() {
+            const btn = document.getElementById('drawTeamsBtn');
+            if (btn) {
+                btn.disabled = state.players.length < 3;
+            }
+        }
+
+        function startCountryDrawAnimation() {
+            const drawContent = document.getElementById('drawContent');
+            const regCard = document.getElementById('registrationCard');
+            
+            if (regCard) {
+                regCard.style.opacity = '0.3';
+                regCard.style.pointerEvents = 'none';
+            }
+
+            performSorteoEquipos(state);
+
+            let playerIdx = 0;
+            drawNextPlayerCountry();
+
+            function drawNextPlayerCountry() {
+                if (playerIdx >= state.players.length) {
+                    setTimeout(() => {
+                        renderGroupDrawUI();
+                        renderPlayerList();
+                    }, 1000);
+                    return;
+                }
+
+                const player = state.players[playerIdx];
+                let cycleIdx = 0;
+                let duration = 80;
+                const totalCycles = 16;
+
+                drawContent.innerHTML = `
+                    <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                        <h4 class="font-label uppercase text-secondary tracking-widest" style="font-size: 0.75rem; margin-bottom: 0.5rem;">Asignando Selección Para:</h4>
+                        <h3 class="neon-text-secondary" style="font-size: 2.25rem; font-weight: 900; margin-bottom: 2rem;">${player.name}</h3>
+                        
+                        <div id="flagDisplay" style="position: relative; width: 220px; height: 160px; background-color: var(--surface-variant); border: 2px solid rgba(0,255,204,0.4); border-radius: 0.75rem; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(0,255,204,0.08); transition: all 0.3s;">
+                            <img src="https://flagcdn.com/w160/ar.png" id="animFlag" class="sorteo-cycling" style="width: 120px; height: 75px; object-fit: cover; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                            <span id="animName" class="font-label uppercase tracking-wider text-on-background font-bold text-sm" style="margin-top: 1rem;">Argentina</span>
+                        </div>
+                    </div>
+                `;
+
+                const animFlag = document.getElementById('animFlag');
+                const animName = document.getElementById('animName');
+
+                function cycle() {
+                    const randomTeam = TEAMS_DATABASE[Math.floor(Math.random() * TEAMS_DATABASE.length)];
+                    animFlag.src = `https://flagcdn.com/w160/${randomTeam.code}.png`;
+                    animName.textContent = randomTeam.name;
+
+                    cycleIdx++;
+                    if (cycleIdx < totalCycles) {
+                        duration += 20;
+                        setTimeout(cycle, duration);
+                    } else {
+                        // Real country
+                        animFlag.classList.remove('sorteo-cycling');
+                        animFlag.src = `https://flagcdn.com/w160/${player.team.code}.png`;
+                        animName.textContent = player.team.name;
+                        
+                        const display = document.getElementById('flagDisplay');
+                        display.style.borderColor = 'var(--primary)';
+                        display.style.boxShadow = '0 0 30px rgba(255,45,120,0.3)';
+                        
+                        animName.className = "neon-text-primary";
+                        animName.style.fontSize = "1.1rem";
+                        animName.style.fontWeight = "900";
+                        animName.style.letterSpacing = "0.08em";
+                        animName.style.marginTop = "1rem";
+                        animName.style.textTransform = "uppercase";
+
+                        playerIdx++;
+                        setTimeout(drawNextPlayerCountry, 1800);
+                    }
+                }
+                
+                setTimeout(cycle, duration);
+            }
+        }
+
+        function renderGroupDrawUI() {
+            document.getElementById('pageTitle').textContent = "Sorteo de Grupos";
+            document.getElementById('pageSubtitle').textContent = "Distribuye las selecciones en sus respectivos grupos para iniciar el torneo.";
+
+            const regCard = document.getElementById('registrationCard');
+            if (regCard) {
+                regCard.style.opacity = '1';
+                regCard.style.pointerEvents = 'auto';
+                regCard.style.borderColor = 'rgba(255,255,255,0.05)';
+                regCard.innerHTML = `
+                    <div class="text-center" style="padding: 1.5rem 0; opacity: 0.6;">
+                        <span class="material-symbols-outlined" style="font-size: 2.5rem; color: var(--outline); margin-bottom: 0.5rem;">lock</span>
+                        <p class="font-label uppercase font-bold text-xs" style="color: var(--outline); letter-spacing: 0.1em;">Registro Cerrado</p>
+                        <p class="text-xs text-on-surface-variant mt-1" style="font-size: 0.75rem;">${state.players.length} jugadores listos</p>
+                    </div>
+                `;
+            }
+
+            const drawContent = document.getElementById('drawContent');
+            const N = state.players.length;
+            const config = getTournamentConfig(N);
+
+            drawContent.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                    <span class="material-symbols-outlined text-tertiary" style="font-size: 4rem; margin-bottom: 1.5rem; filter: drop-shadow(0 0 10px var(--tertiary));">group_work</span>
+                    <h3 style="font-size: 1.75rem; font-weight: 800; color: var(--on-surface); margin-bottom: 0.5rem;">Distribución de Grupos</h3>
+                    <p class="page-subtitle" style="margin-bottom: 2rem; max-width: 420px; font-size: 0.875rem;">
+                        El torneo se dividirá en <strong class="text-secondary">${config.G} grupo(s)</strong>.
+                        Clasifican los mejores <strong class="text-tertiary">${config.K} equipos</strong> a la Fase Final (${config.round === 'final' ? 'Gran Final' : config.round === 'sf' ? 'Semifinales' : 'Cuartos'}).
+                    </p>
+                    
+                    <button onclick="startGroupDrawAnimation()" class="btn btn-pill btn-secondary" id="drawGroupsBtn">
+                        <span class="material-symbols-outlined">grid_view</span>
+                        Sortear Grupos
+                    </button>
+                </div>
+            `;
+        }
+
+        function startGroupDrawAnimation() {
+            const drawContent = document.getElementById('drawContent');
+            
+            performSorteoGrupos(state);
+
+            drawContent.innerHTML = `
+                <div style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+                    <h3 class="neon-text-secondary uppercase" style="font-size: 1.25rem; font-weight: 900; margin-bottom: 1.5rem; animation: blink 1s infinite;">Sorteando Grupos...</h3>
+                    <div id="groupsContainer" style="display: grid; grid-template-columns: 1fr; gap: 1rem; width: 100%; max-width: 580px;">
+                        <!-- Groups injected dynamically -->
+                    </div>
+                </div>
+            `;
+
+            const container = document.getElementById('groupsContainer');
+            // If more than 2 groups, adjust grid columns
+            if (state.groups.length > 2) {
+                container.style.gridTemplateColumns = "1fr 1fr";
+            }
+            if (window.innerWidth < 640) {
+                container.style.gridTemplateColumns = "1fr";
+            }
+
+            let grpIdx = 0;
+            showNextGroup();
+
+            function showNextGroup() {
+                if (grpIdx >= state.groups.length) {
+                    setTimeout(() => {
+                        const actionDiv = document.createElement('div');
+                        actionDiv.style.gridColumn = '1 / -1';
+                        actionDiv.style.display = 'flex';
+                        actionDiv.style.flexDirection = 'column';
+                        actionDiv.style.alignItems = 'center';
+                        actionDiv.style.marginTop = '1.5rem';
+                        actionDiv.style.animation = 'fadeIn 0.5s ease-out forwards';
+                        actionDiv.innerHTML = `
+                            <button onclick="startTournamentPlay()" class="btn btn-pill btn-primary" style="font-size: 1.25rem; padding: 1.25rem 3rem; box-shadow: 0 0 25px rgba(255,45,120,0.25);">
+                                INICIAR TORNEO
+                            </button>
+                        `;
+                        container.appendChild(actionDiv);
+                    }, 500);
+                    return;
+                }
+
+                const group = state.groups[grpIdx];
+                const card = document.createElement('div');
+                card.className = 'card high';
+                card.style.padding = '1rem';
+                card.style.textAlign = 'left';
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(15px)';
+                card.style.transition = 'all 0.4s ease';
+                
+                let teamsListHTML = '';
+                group.teams.forEach(t => {
+                    teamsListHTML += `
+                        <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                            <img src="https://flagcdn.com/w40/${t.code}.png" class="flag-img" style="width: 1.1rem; height: 0.7rem;">
+                            <div style="overflow: hidden;">
+                                <p style="font-size: 0.8rem; font-weight: 700; color: var(--on-surface); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.name}</p>
+                                <p class="font-label" style="font-size: 0.6rem; color: var(--on-surface-variant); text-transform: uppercase; margin-top: -0.1rem;">${t.playerName}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <h4 class="font-headline neon-text-secondary" style="font-size: 0.95rem; font-weight: 900; border-bottom: 1px solid rgba(0,255,204,0.2); padding-bottom: 0.4rem; margin-bottom: 0.5rem; letter-spacing: 0.08em; text-transform: uppercase;">${group.name}</h4>
+                    <div style="display: flex; flex-direction: column;">
+                        ${teamsListHTML}
+                    </div>
+                `;
+
+                container.appendChild(card);
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 50);
+
+                grpIdx++;
+                setTimeout(showNextGroup, 500);
+            }
+        }
+
+        function startTournamentPlay() {
+            window.location.href = "fase-de-grupos.html";
+        }
+    </script>
+</body>
+</html>

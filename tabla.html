@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html class="dark" lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Copa PES - Tabla de Posiciones</title>
+    <!-- Google Fonts & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <!-- Custom Pure CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Mobile TopNav -->
+    <nav class="mobile-header">
+        <div class="neon-text-primary" style="font-family: var(--font-headline); font-weight: 900; font-size: 1.5rem; font-style: italic; letter-spacing: -0.05em;">Copa PES</div>
+        <div>
+            <button onclick="resetTournament()" class="btn btn-xs btn-primary">
+                <span class="material-symbols-outlined" style="font-size: 1.25rem;">restart_alt</span>
+            </button>
+        </div>
+    </nav>
+    
+    <!-- Mobile Navigation links -->
+    <div class="mobile-nav-scroll">
+        <a class="mobile-nav-link" href="index.html">Sorteo</a>
+        <a class="mobile-nav-link" href="fase-de-grupos.html">Grupos</a>
+        <a class="mobile-nav-link" href="partidos.html">Partidos</a>
+        <a class="mobile-nav-link active" href="tabla.html">Tabla</a>
+        <a class="mobile-nav-link" href="fase-final.html">Fase Final</a>
+    </div>
+
+    <div class="app-container">
+        <!-- SideNavBar (Desktop) -->
+        <aside class="desktop-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo-icon">
+                    <span class="material-symbols-outlined text-secondary" style="font-size: 1.75rem;">leaderboard</span>
+                </div>
+                <div class="text-center">
+                    <h1 class="neon-text-secondary" style="font-size: 1.25rem; letter-spacing: 0.1em;">Copa PES</h1>
+                    <p class="font-label uppercase tracking-widest" style="font-size: 0.65rem; color: var(--on-surface-variant); margin-top: 0.25rem;">Fase de Grupos</p>
+                </div>
+            </div>
+            <div class="sidebar-nav" id="navLinks">
+                <a class="sidebar-nav-link" href="index.html">
+                    <span class="material-symbols-outlined">casino</span>
+                    <span>Sorteo</span>
+                </a>
+                <a class="sidebar-nav-link" href="fase-de-grupos.html">
+                    <span class="material-symbols-outlined">group</span>
+                    <span>Grupos</span>
+                </a>
+                <a class="sidebar-nav-link" href="partidos.html">
+                    <span class="material-symbols-outlined">sports_soccer</span>
+                    <span>Partidos</span>
+                </a>
+                <a class="sidebar-nav-link active" href="tabla.html">
+                    <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">leaderboard</span>
+                    <span>Tabla</span>
+                </a>
+                <a class="sidebar-nav-link" href="fase-final.html">
+                    <span class="material-symbols-outlined">emoji_events</span>
+                    <span>Fase Final</span>
+                </a>
+            </div>
+            <div class="sidebar-footer">
+                <button onclick="resetTournament()" class="btn btn-primary w-full" style="padding: 0.6rem; font-size: 0.75rem;">
+                    Reiniciar
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Canvas -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <header class="page-header" style="border-bottom: 1px solid var(--outline-variant); padding-bottom: 1.25rem;">
+                <div>
+                    <h2 class="page-title text-on-surface mb-2" style="font-size: 2rem;">Tabla de Posiciones</h2>
+                    <p class="font-label text-secondary tracking-widest uppercase neon-text-secondary" style="font-size: 0.75rem; font-weight: 700;">Clasificaciones del Torneo</p>
+                </div>
+                
+                <!-- Group Selectors -->
+                <div class="tab-group" id="groupTabs">
+                    <!-- Tab buttons injected dynamically -->
+                </div>
+            </header>
+            
+            <div id="noDataContainer" class="hidden" style="height: 250px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--on-surface-variant); opacity: 0.6; border: 2px dashed rgba(255,255,255,0.05); border-radius: 0.75rem; background: var(--surface-container-low);">
+                <span class="material-symbols-outlined" style="font-size: 3rem; margin-bottom: 0.75rem;">grid_off</span>
+                <p style="font-size: 1.1rem; font-weight: 700; font-family: var(--font-headline);">No hay grupos ni posiciones registradas.</p>
+            </div>
+
+            <!-- Table Container (Glassmorphism / Bento style) -->
+            <div class="card low" id="tableContainer" style="padding: 0; overflow: hidden; border-color: var(--outline-variant); display: none;">
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="p-4 w-12 text-center" style="width: 3.5rem; text-align: center;">Pos</th>
+                                <th>Equipo / Selección</th>
+                                <th style="width: 4rem; text-align: center;">PJ</th>
+                                <th style="width: 4rem; text-align: center;">G</th>
+                                <th style="width: 4rem; text-align: center;">E</th>
+                                <th style="width: 4rem; text-align: center;">P</th>
+                                <th style="width: 4rem; text-align: center;">GF</th>
+                                <th style="width: 4rem; text-align: center;">GC</th>
+                                <th style="width: 8rem; text-align: center;">DG</th>
+                                <th style="width: 5rem; text-align: center; color: var(--secondary);">Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        let state = loadState();
+        let activeTab = "";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkPhaseRedirect();
+            if (state.groups && state.groups.length > 0) {
+                activeTab = state.groups[0].id;
+                document.getElementById('tableContainer').style.display = 'block';
+                renderUI();
+            } else {
+                document.getElementById('noDataContainer').classList.remove('hidden');
+            }
+        });
+
+        function renderUI() {
+            renderGroupTabs();
+            renderStandingsTable();
+        }
+
+        function renderGroupTabs() {
+            const tabs = document.getElementById('groupTabs');
+            tabs.innerHTML = '';
+
+            state.groups.forEach(g => {
+                const btn = document.createElement('button');
+                const isActive = activeTab === g.id;
+                btn.className = `tab-btn ${isActive ? 'active' : ''}`;
+                btn.textContent = g.name;
+                btn.onclick = () => {
+                    activeTab = g.id;
+                    renderUI();
+                };
+                tabs.appendChild(btn);
+            });
+        }
+
+        function renderStandingsTable() {
+            const group = state.groups.find(g => g.id === activeTab);
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            if (!group) return;
+
+            group.standings.forEach((team, index) => {
+                const tr = document.createElement('tr');
+                const isQualifier = index < 2; // top 2 qualify
+                
+                tr.className = `table-row-hover ${isQualifier ? 'qualifier-row' : ''}`;
+
+                // Calculate GD bar widths
+                const absDG = Math.abs(team.dg);
+                const barWidth = Math.min(100, absDG * 10);
+                
+                let dgBarHTML = '';
+                if (team.dg > 0) {
+                    dgBarHTML = `
+                        <div class="dg-bar-container">
+                            <div class="dg-bar-left"></div>
+                            <div class="dg-bar-divider"></div>
+                            <div class="dg-bar-right">
+                                <div class="dg-bar-fill-pos" style="width: ${barWidth}%;"></div>
+                            </div>
+                        </div>
+                        <span class="font-label text-secondary" style="font-size: 0.75rem;">+${team.dg}</span>
+                    `;
+                } else if (team.dg < 0) {
+                    dgBarHTML = `
+                        <div class="dg-bar-container">
+                            <div class="dg-bar-left">
+                                <div class="dg-bar-fill-neg" style="width: ${barWidth}%;"></div>
+                            </div>
+                            <div class="dg-bar-divider"></div>
+                            <div class="dg-bar-right"></div>
+                        </div>
+                        <span class="font-label text-primary" style="font-size: 0.75rem;">${team.dg}</span>
+                    `;
+                } else {
+                    dgBarHTML = `
+                        <div class="dg-bar-container">
+                            <div class="dg-bar-left"></div>
+                            <div class="dg-bar-divider"></div>
+                            <div class="dg-bar-right"></div>
+                        </div>
+                        <span class="font-label text-on-surface-variant" style="font-size: 0.75rem;">0</span>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td style="text-align: center; font-family: var(--font-headline); font-weight: 800; font-size: 0.95rem; color: ${isQualifier ? 'var(--secondary)' : 'var(--on-surface-variant)'}">${index + 1}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <img src="https://flagcdn.com/w40/${team.code}.png" class="flag-img" style="width: 1.6rem; height: 1.05rem;">
+                            <div>
+                                <span style="font-family: var(--font-headline); font-weight: 700; color: var(--on-surface); font-size: 0.95rem; display: block;">${team.name}</span>
+                                <span class="font-label" style="font-size: 0.65rem; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.05em; margin-top: -0.1rem; display: block;">${team.playerName}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="text-align: center; font-weight: 600; color: var(--on-surface-variant);">${team.pj}</td>
+                    <td style="text-align: center; font-weight: 500;">${team.pg}</td>
+                    <td style="text-align: center; font-weight: 500;">${team.pe}</td>
+                    <td style="text-align: center; font-weight: 500;">${team.pp}</td>
+                    <td style="text-align: center; font-weight: 500;">${team.gf}</td>
+                    <td style="text-align: center; font-weight: 500;">${team.gc}</td>
+                    <td style="text-align: center; padding: 0.5rem 1rem;">
+                        ${dgBarHTML}
+                    </td>
+                    <td style="text-align: center; font-family: var(--font-headline); font-weight: 900; font-size: 1.15rem; color: ${
+                        isQualifier ? 'var(--secondary)' : 'var(--on-surface)'
+                    }">${team.pts}</td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+        }
+    </script>
+</body>
+</html>
